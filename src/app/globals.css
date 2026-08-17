@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm paper background */
+    --background: 38 33% 98%;
+    /* Deep navy ink */
+    --foreground: 211 56% 16%;
+
+    /* Primary: deep, trustworthy navy */
+    --primary: 210 64% 22%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Accent: warm painter's amber */
+    --accent: 36 95% 50%;
+    --accent-foreground: 210 64% 14%;
+
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 210 64% 22%;
+
+    --muted: 38 22% 94%;
+    --muted-foreground: 213 18% 42%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 211 56% 16%;
+
+    --border: 36 18% 88%;
+    --input: 36 18% 85%;
+    --ring: 36 95% 50%;
+
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --radius: 0.875rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.3);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
