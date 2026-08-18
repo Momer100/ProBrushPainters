@@ -15,7 +15,7 @@ import CtaBand from "@/components/cta-band";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: `Meet ${site.name} — ${site.location}'s trusted painting & decorating team. Fully insured, ${site.stats.years}+ years of experience, ${site.stats.projects}+ projects completed.`,
+  description: `Meet ${site.name} — ${site.location}'s trusted painting & decorating team. ${site.stats.years}+ years of experience, ${site.stats.projects}+ projects completed.`,
 };
 
 const valueIcons: Record<string, LucideIcon> = {
@@ -52,7 +52,7 @@ export default function AboutPage() {
                 with the finish.
               </p>
               <p>
-                Every job is fully insured and covered by our{" "}
+                Every job is covered by our{" "}
                 {site.guaranteeYears}-year workmanship guarantee — so you can
                 book with total confidence.
               </p>

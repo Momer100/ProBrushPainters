@@ -11,12 +11,11 @@ export default function SiteFooter() {
         <div>
           <Logo dark />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/70">
-            Professional painting &amp; decorating across {site.location}.
-            Fully insured, {site.guaranteeYears}-year workmanship guarantee,
+            A {site.guaranteeYears}-year workmanship guarantee,
             and a finish you&apos;ll be proud of.
           </p>
           <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-accent">
-            <ShieldCheck className="h-4 w-4" /> Fully insured &amp; guaranteed
+            <ShieldCheck className="h-4 w-4" /> Fully guaranteed
           </p>
         </div>
 

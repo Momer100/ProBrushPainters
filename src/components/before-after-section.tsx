@@ -1,27 +1,18 @@
 import BeforeAfter from "@/components/before-after";
 import SectionHeading from "@/components/section-heading";
+import Image from "next/image";
 
-// NOTE: these are placeholder photos — drop the client's real
-// before/after pairs into /public/images and update the paths below.
-const projects = [
-  {
-    title: "Living room repaint",
-    area: "Ranelagh",
-    before: "/images/living-before.jpg",
-    after: "/images/living-after.jpg",
-  },
-  {
-    title: "Kitchen cabinet respray",
-    area: "Dundrum",
-    before: "/images/kitchen-before.jpg",
-    after: "/images/kitchen-after.jpg",
-  },
-  {
-    title: "Full exterior repaint",
-    area: "Blackrock",
-    before: "/images/exterior-before.jpg",
-    after: "/images/exterior-after.jpg",
-  },
+const sliderProject = {
+  title: "Recent Project",
+  area: "Dublin",
+  before: "/images/s-l1600 (9).jpg",
+  after: "/images/s-l1600 (10).jpg",
+};
+
+const otherProjects = [
+  { src: "/images/s-l1600 (11).jpg", label: "Interior Work" },
+  { src: "/images/s-l1600 (12).jpg", label: "Painting Details" },
+  { src: "/images/s-l1600 (13).jpg", label: "Flawless Finish" },
 ];
 
 export default function BeforeAfterSection() {
@@ -31,30 +22,34 @@ export default function BeforeAfterSection() {
         <SectionHeading
           eyebrow="Our work"
           title="See the difference for yourself"
-          sub="Drag the slider to compare real before and after results from recent projects."
+          sub="Take a look at some of our recent painting and decorating projects."
         />
 
         {/* Feature slider */}
         <div className="mt-12">
           <BeforeAfter
-            before={projects[0].before}
-            after={projects[0].after}
-            title={projects[0].title}
+            before={sliderProject.before}
+            after={sliderProject.after}
+            title={sliderProject.title}
           />
           <p className="mt-4 text-center text-sm font-semibold text-muted-foreground">
-            {projects[0].title} · {projects[0].area}
+            {sliderProject.title} · {sliderProject.area}
           </p>
         </div>
 
-        {/* Two more */}
-        <div className="mt-10 grid gap-8 md:grid-cols-2">
-          {projects.slice(1).map((p) => (
-            <div key={p.title}>
-              <BeforeAfter before={p.before} after={p.after} title={p.title} />
-              <p className="mt-4 text-center text-sm font-semibold text-muted-foreground">
-                {p.title} · {p.area}
-              </p>
-            </div>
+        {/* Other images */}
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
+          {otherProjects.map((p) => (
+            <figure key={p.src}>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
+                <Image
+                  src={p.src}
+                  alt={p.label}
+                  fill
+                  className="object-cover transition-transform duration-500 hover:scale-105"
+                />
+              </div>
+            </figure>
           ))}
         </div>
       </div>

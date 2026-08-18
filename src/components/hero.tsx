@@ -45,9 +45,6 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-foreground/70">
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-4 w-4 text-accent" /> Fully insured
-            </span>
-            <span className="inline-flex items-center gap-1.5">
               <BadgeCheck className="h-4 w-4 text-accent" />{" "}
               {site.guaranteeYears}-year guarantee
             </span>
@@ -84,10 +81,7 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Floating insured chip */}
-          <div className="absolute right-5 top-5 rounded-full bg-primary/90 px-4 py-2 text-xs font-bold text-white shadow-lift backdrop-blur">
-            Fully Insured ✓
-          </div>
+
         </div>
       </div>
     </section>

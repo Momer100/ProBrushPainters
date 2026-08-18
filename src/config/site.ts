@@ -158,7 +158,7 @@ export const site = {
     {
       icon: "ShieldCheck",
       title: "Fully guaranteed",
-      text: "Fully insured and every job covered by our workmanship guarantee for total peace of mind.",
+      text: "Every job is covered by our workmanship guarantee for total peace of mind.",
     },
   ] as const,
 };

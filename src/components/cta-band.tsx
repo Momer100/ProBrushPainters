@@ -33,7 +33,7 @@ export default function CtaBand() {
           </div>
 
           <p className="mt-6 text-xs font-semibold tracking-wide text-white/50">
-            Fully insured · {site.guaranteeYears}-year workmanship guarantee ·
+            {site.guaranteeYears}-year workmanship guarantee ·
             Free quotes
           </p>
         </div>

@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     default: `${site.name} | Painters & Decorators in ${site.location}`,
     template: `%s | ${site.name}`,
   },
-  description: `Professional painting & decorating in ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. Fully insured, ${site.guaranteeYears}-year guarantee. Get a free quote today.`,
+  description: `Professional painting & decorating in ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. ${site.guaranteeYears}-year guarantee. Get a free quote today.`,
   openGraph: {
     type: "website",
     url: site.url,
     siteName: site.name,
     title: `${site.name} | Painters & Decorators in ${site.location}`,
-    description: `A flawless finish, guaranteed. Fully insured painters & decorators serving ${site.location} and surrounding areas.`,
+    description: `A flawless finish, guaranteed. Professional painters & decorators serving ${site.location} and surrounding areas.`,
     images: ["/images/hero.jpg"],
   },
 };

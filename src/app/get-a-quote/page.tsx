@@ -100,7 +100,7 @@ export default function GetAQuotePage() {
                 </p>
                 <p className="flex items-center gap-2.5 text-foreground/80">
                   <ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
-                  Fully insured · {site.guaranteeYears}-year workmanship
+                  {site.guaranteeYears}-year workmanship
                   guarantee
                 </p>
               </CardContent>
