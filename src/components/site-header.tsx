@@ -9,10 +9,10 @@ import { buttonVariants } from "@/components/ui/button";
 
 const nav = [
   { href: "/", label: "Home" },
-  { href: "/#services", label: "Services" },
+  { href: "/services/", label: "Services" },
   { href: "/#work", label: "Our Work" },
-  { href: "/#reviews", label: "Reviews" },
   { href: "/about/", label: "About Us" },
+  { href: "/contact/", label: "Contact" },
 ];
 
 export default function SiteHeader() {
