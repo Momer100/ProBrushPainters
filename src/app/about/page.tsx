@@ -61,8 +61,8 @@ export default function AboutPage() {
 
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
             <Image
-              src="/images/s-l1600 (12).jpg"
-              alt={`${site.name} work in ${site.location}`}
+              src="/images/team.jpg"
+              alt={`The ${site.name} team at work`}
               fill
               className="object-cover"
             />
