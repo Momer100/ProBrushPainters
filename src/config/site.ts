@@ -11,19 +11,19 @@ export const site = {
   tagline: "Painting & Decorating",
   domain: "probrushpainters.ie",
   url: "https://probrushpainters.ie",
-  location: "Dublin", // used in headlines & SEO
+  location: "Ireland", // used in headlines & SEO
 
   // ── Contact details (PLACEHOLDERS — replace with real ones) ──
   phoneDisplay: "(085) 123 4567", // shown on screen
   phoneHref: "+353851234567", // used by tel: links
   whatsappNumber: "353851234567", // country code, no + or spaces
   email: "info@probrushpainters.ie",
-  addressLine: "Dublin, Ireland",
+  addressLine: "Ireland",
   hours: "Mon–Sat · 8:00–18:00",
 
   // ── Trust signals (PLACEHOLDERS — replace with real ones) ──
   stats: {
-    years: 15, // years in business
+    years: 2, // years in business
     projects: 800, // projects completed
     rating: 4.9, // average review rating
     reviewCount: 120, // total reviews

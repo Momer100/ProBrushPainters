@@ -61,8 +61,8 @@ export default function AboutPage() {
 
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
             <Image
-              src="/images/team.jpg"
-              alt={`The ${site.name} team at work`}
+              src="/images/s-l1600 (12).jpg"
+              alt={`${site.name} work in ${site.location}`}
               fill
               className="object-cover"
             />
@@ -110,9 +110,9 @@ export default function AboutPage() {
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { src: "/images/living-after.jpg", label: "Living room · Ranelagh" },
-              { src: "/images/kitchen-after.jpg", label: "Kitchen respray · Dundrum" },
-              { src: "/images/exterior-after.jpg", label: "Exterior · Blackrock" },
+              { src: "/images/s-l1600 (17).jpg", label: "Interior Painting" },
+              { src: "/images/s-l1600 (18).jpg", label: "Quality Finish" },
+              { src: "/images/s-l1600 (21).jpg", label: "Room Transformation" },
             ].map((img) => (
               <figure key={img.src}>
                 <div className="relative aspect-[3/2] overflow-hidden rounded-2xl shadow-soft">

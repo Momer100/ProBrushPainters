@@ -109,8 +109,8 @@ export default function ContactPage() {
                   <div className="mt-6 flex items-start gap-3">
                     <MapPin className="h-5 w-5 shrink-0 text-accent" />
                     <p className="text-base text-primary-foreground/90">
-                      Based in <span className="font-semibold">{site.location}</span>. <br />
-                      We serve the wider Dublin area including: <br />
+                      Serving clients all across <span className="font-semibold">{site.location}</span>. <br />
+                      Available for projects nationwide including:
                       <span className="text-primary-foreground/70 text-sm mt-2 block">
                         {site.areasServed.slice(0, 10).join(", ")} and more.
                       </span>
