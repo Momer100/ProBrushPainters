@@ -58,11 +58,11 @@ export default function Hero() {
         <div className="relative">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
             <Image
-              src="/images/hero.jpg"
-              alt={`${site.name} painter at work in a ${site.location} home`}
+              src="/images/s-l1600 (23).jpg"
+              alt={`${site.name} project in ${site.location}`}
               fill
               priority
-              className="object-cover"
+              className="object-cover object-center"
             />
           </div>
 

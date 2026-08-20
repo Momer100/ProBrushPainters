@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} | Painters & Decorators in ${site.location}`,
     description: `A flawless finish, guaranteed. Professional painters & decorators serving ${site.location} and surrounding areas.`,
-    images: ["/images/hero.jpg"],
+    images: ["/images/s-l1600 (23).jpg"],
   },
 };
 
@@ -36,7 +36,7 @@ const jsonLd = {
   url: site.url,
   telephone: site.phoneHref,
   email: site.email,
-  image: `${site.url}/images/hero.jpg`,
+  image: `${site.url}/images/s-l1600 (23).jpg`,
   address: {
     "@type": "PostalAddress",
     addressLocality: site.location,
