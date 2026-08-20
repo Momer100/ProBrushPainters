@@ -116,6 +116,9 @@ export const site = {
 
   // ── Areas served (PLACEHOLDERS — replace with the real list) ──
   areasServed: [
+    // Dublin city & suburbs
+    "Dublin City",
+    "Dublin 1–24",
     "Ranelagh",
     "Ballsbridge",
     "Clontarf",
@@ -131,11 +134,44 @@ export const site = {
     "Tallaght",
     "Lucan",
     "Blanchardstown",
+    // Leinster
     "Bray",
     "Greystones",
+    "Wicklow",
+    "Arklow",
     "Naas",
+    "Newbridge",
     "Celbridge",
     "Maynooth",
+    "Kildare",
+    "Drogheda",
+    "Dundalk",
+    "Navan",
+    "Trim",
+    "Mullingar",
+    "Tullamore",
+    "Portlaoise",
+    "Kilkenny",
+    "Carlow",
+    "Wexford",
+    // Munster
+    "Cork",
+    "Cork City",
+    "Limerick",
+    "Waterford",
+    "Galway",
+    "Galway City",
+    "Tralee",
+    "Killarney",
+    "Ennis",
+    // Connacht
+    "Sligo",
+    "Castlebar",
+    "Tuam",
+    // Ulster
+    "Monaghan",
+    "Cavan",
+    "Letterkenny",
   ] as const,
 
   // ── About page values ──
