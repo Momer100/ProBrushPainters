@@ -91,55 +91,60 @@ export default function BeforeAfterSection() {
             Full Room Transformation
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 flex flex-col md:flex-row gap-6">
             {/* Before — large */}
-            <figure className="md:row-span-2">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-soft md:h-full">
-                <Image
-                  src={transformation2.before.src}
-                  alt={transformation2.before.label}
-                  fill
-                  className="object-cover"
-                />
-                <span className="absolute left-4 top-4 rounded-full bg-red-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                  Before
-                </span>
-              </div>
-            </figure>
-
-            {/* Main after shots */}
-            {transformation2.mainAfter.map((img) => (
-              <figure key={img.src}>
-                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
+            <div className="md:w-1/3">
+              <figure className="h-full">
+                <div className="relative h-full min-h-[400px] w-full overflow-hidden rounded-2xl shadow-soft">
                   <Image
-                    src={img.src}
-                    alt={img.label}
+                    src={transformation2.before.src}
+                    alt={transformation2.before.label}
                     fill
                     className="object-cover"
                   />
-                  <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                    After
+                  <span className="absolute left-4 top-4 rounded-full bg-red-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+                    Before
                   </span>
                 </div>
               </figure>
-            ))}
+            </div>
 
-            {/* Related shots — same room */}
-            {transformation2.relatedAfter.map((img) => (
-              <figure key={img.src}>
-                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
-                  <Image
-                    src={img.src}
-                    alt={img.label}
-                    fill
-                    className="object-cover"
-                  />
-                  <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                    After
-                  </span>
-                </div>
-              </figure>
-            ))}
+            {/* After shots (2x2 grid) */}
+            <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Main after shots */}
+              {transformation2.mainAfter.map((img) => (
+                <figure key={img.src}>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
+                    <Image
+                      src={img.src}
+                      alt={img.label}
+                      fill
+                      className="object-cover"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+                      After
+                    </span>
+                  </div>
+                </figure>
+              ))}
+
+              {/* Related shots — same room */}
+              {transformation2.relatedAfter.map((img) => (
+                <figure key={img.src}>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
+                    <Image
+                      src={img.src}
+                      alt={img.label}
+                      fill
+                      className="object-cover"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+                      After
+                    </span>
+                  </div>
+                </figure>
+              ))}
+            </div>
           </div>
         </div>
 

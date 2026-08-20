@@ -108,14 +108,17 @@ export default function AboutPage() {
             title="A few finishes we're proud of"
             sub="Real projects from around the area — see more on the home page."
           />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
             {[
               { src: "/images/s-l1600 (17).jpg", label: "Interior Painting" },
               { src: "/images/s-l1600 (18).jpg", label: "Quality Finish" },
               { src: "/images/s-l1600 (21).jpg", label: "Room Transformation" },
-            ].map((img) => (
-              <figure key={img.src}>
-                <div className="relative aspect-[3/2] overflow-hidden rounded-2xl shadow-soft">
+            ].map((img, index) => (
+              <figure 
+                key={img.src} 
+                className={index === 0 ? "md:col-span-2" : ""}
+              >
+                <div className={`relative overflow-hidden rounded-2xl shadow-soft ${index === 0 ? 'aspect-video' : 'aspect-[4/3]'}`}>
                   <Image
                     src={img.src}
                     alt={img.label}
