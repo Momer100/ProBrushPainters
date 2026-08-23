@@ -14,21 +14,16 @@ export const site = {
   location: "Ireland", // used in headlines & SEO
 
   // ── Contact details (PLACEHOLDERS — replace with real ones) ──
-  phoneDisplay: "(085) 123 4567", // shown on screen
-  phoneHref: "+353851234567", // used by tel: links
-  whatsappNumber: "353851234567", // country code, no + or spaces
+  phoneDisplay: "086 125 3342", // shown on screen
+  phoneHref: "+353861253342", // used by tel: links
+  whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
   addressLine: "Ireland",
-  hours: "Mon–Sat · 8:00–18:00",
 
-  // ── Trust signals (PLACEHOLDERS — replace with real ones) ──
+  // ── Trust signals ──
   stats: {
-    years: 2, // years in business
-    projects: 800, // projects completed
-    rating: 4.9, // average review rating
-    reviewCount: 120, // total reviews
+    years: 8, // years in business
   },
-  guaranteeYears: 2,
 
   // ── Services ──
   services: [
@@ -73,20 +68,20 @@ export const site = {
   // ── How it works ──
   steps: [
     {
-      title: "Tell us about your job",
-      text: "Call, WhatsApp or use the quote form. Sending a few photos helps us price it faster.",
+      title: "Call us for a free quote",
+      text: "Give us a call and tell us about your job. Sending a few photos helps us price it faster.",
     },
     {
       title: "Get your free quote",
-      text: "A clear, fixed-price quote within 24 hours. No hidden extras, no obligation.",
+      text: "A clear, fixed-price quote with no hidden extras and no obligation.",
     },
     {
       title: "We prep & paint",
       text: "Floors and furniture protected, surfaces prepared properly, premium paints throughout.",
     },
     {
-      title: "Walkthrough & guarantee",
-      text: "We inspect everything together before we leave. All work covered by our guarantee.",
+      title: "Walkthrough",
+      text: "We inspect everything together before we leave to make sure you're fully happy with the finish.",
     },
   ] as const,
 

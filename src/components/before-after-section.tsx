@@ -82,10 +82,10 @@ export default function BeforeAfterSection() {
           </div>
         </div>
 
-        {/* ── Before & After #2: Full Room ── */}
+        {/* ── Full Room Transformation ── */}
         <div className="mt-20">
           <h3 className="text-center text-xs font-extrabold uppercase tracking-[0.25em] text-accent">
-            Before & After
+            Room Transformation
           </h3>
           <p className="mt-2 text-center text-lg font-bold text-primary">
             Full Room Transformation

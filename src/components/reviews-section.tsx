@@ -11,7 +11,7 @@ export default function ReviewsSection() {
           dark
           eyebrow="Reviews"
           title={`Trusted by homeowners across ${site.location}`}
-          sub={`Rated ${site.stats.rating} out of 5 from ${site.stats.reviewCount}+ reviews. Here's what customers say.`}
+          sub="Here's what our customers say about us."
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">

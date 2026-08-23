@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Clock, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { site } from "@/config/site";
 import { Logo } from "@/components/logo";
 
@@ -11,11 +11,7 @@ export default function SiteFooter() {
         <div>
           <Logo dark />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/70">
-            A {site.guaranteeYears}-year workmanship guarantee,
-            and a finish you&apos;ll be proud of.
-          </p>
-          <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-accent">
-            <ShieldCheck className="h-4 w-4" /> Fully guaranteed
+            Professional painting &amp; decorating across Ireland. Quality finishes you&apos;ll be proud of.
           </p>
         </div>
 
@@ -95,22 +91,9 @@ export default function SiteFooter() {
                 {site.phoneDisplay}
               </a>
             </li>
-            <li>
-              <a
-                href={`mailto:${site.email}`}
-                className="flex items-center gap-2.5 text-primary-foreground/85 hover:text-accent"
-              >
-                <Mail className="h-4 w-4 shrink-0 text-accent" />
-                {site.email}
-              </a>
-            </li>
             <li className="flex items-center gap-2.5 text-primary-foreground/85">
               <MapPin className="h-4 w-4 shrink-0 text-accent" />
               {site.addressLine}
-            </li>
-            <li className="flex items-center gap-2.5 text-primary-foreground/85">
-              <Clock className="h-4 w-4 shrink-0 text-accent" />
-              {site.hours}
             </li>
           </ul>
         </div>
@@ -121,7 +104,7 @@ export default function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {site.name} · {site.domain}
           </p>
-          <p>Painting &amp; Decorating · {site.location}, Ireland</p>
+          <p>Painting &amp; Decorating · Ireland</p>
         </div>
       </div>
     </footer>

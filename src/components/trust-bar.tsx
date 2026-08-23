@@ -2,9 +2,9 @@ import { site } from "@/config/site";
 
 const items = [
   { value: `${site.stats.years}+`, label: "Years of experience" },
-  { value: `${site.stats.projects}+`, label: "Projects completed" },
-  { value: `${site.stats.rating}★`, label: "Average rating" },
-  { value: `${site.guaranteeYears}yr`, label: "Workmanship guarantee" },
+  { value: "Ireland", label: "Nationwide coverage" },
+  { value: "Free", label: "No-obligation quotes" },
+  { value: "100%", label: "Satisfaction focus" },
 ];
 
 export default function TrustBar() {

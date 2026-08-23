@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: `${site.name} | Painters & Decorators in ${site.location}`,
     template: `%s | ${site.name}`,
   },
-  description: `Professional painting & decorating in ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. ${site.guaranteeYears}-year guarantee. Get a free quote today.`,
+  description: `Professional painting & decorating across ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. Get a free quote today.`,
   openGraph: {
     type: "website",
     url: site.url,
@@ -43,13 +43,8 @@ const jsonLd = {
     addressCountry: "IE",
   },
   areaServed: [...site.areasServed],
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: site.stats.rating,
-    reviewCount: site.stats.reviewCount,
-  },
-  openingHours: "Mo-Sa 08:00-18:00",
 };
+
 
 export default function RootLayout({
   children,

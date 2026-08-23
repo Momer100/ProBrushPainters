@@ -33,8 +33,7 @@ export default function CtaBand() {
           </div>
 
           <p className="mt-6 text-xs font-semibold tracking-wide text-white/50">
-            {site.guaranteeYears}-year workmanship guarantee ·
-            Free quotes
+            {site.stats.years}+ years experience · Free quotes · All of Ireland
           </p>
         </div>
       </div>

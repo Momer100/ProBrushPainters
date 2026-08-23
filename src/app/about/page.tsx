@@ -10,12 +10,11 @@ import {
 import { site } from "@/config/site";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
-import ReviewsSection from "@/components/reviews-section";
 import CtaBand from "@/components/cta-band";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: `Meet ${site.name} — ${site.location}'s trusted painting & decorating team. ${site.stats.years}+ years of experience, ${site.stats.projects}+ projects completed.`,
+  description: `Meet ${site.name} — a professional painting and decorating team serving all of Ireland with ${site.stats.years}+ years of experience.`,
 };
 
 const valueIcons: Record<string, LucideIcon> = {
@@ -28,33 +27,33 @@ const valueIcons: Record<string, LucideIcon> = {
 export default function AboutPage() {
   return (
     <>
-      {/* Intro — PLACEHOLDER story, replace with the real one */}
+      {/* Intro */}
       <section className="py-16 lg:py-24">
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <div>
             <SectionHeading
               center={false}
               eyebrow="About us"
-              title={`The crew ${site.location} trusts with its walls`}
+              title="A painting team you can trust"
             />
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
-                {site.name} started over {site.stats.years} years ago with one
-                van, two brushes and a simple rule: treat every home like
-                it&apos;s our own. Today we&apos;ve completed more than{" "}
-                {site.stats.projects} projects across {site.location} — from
-                single feature walls to full period-home restorations.
+                {site.name} is a professional painting and decorating team with
+                over {site.stats.years} years of experience working across
+                Ireland. We handle everything from single rooms and feature
+                walls to full interior and exterior projects for homes and
+                commercial spaces.
               </p>
               <p>
-                We&apos;re a small, hands-on team. The person who quotes your
-                job is the person who paints it, and we don&apos;t leave until
-                you&apos;ve walked through every room and you&apos;re happy
-                with the finish.
+                We take pride in doing the job properly — proper preparation,
+                quality materials, and a clean finish every time. We show up
+                when we say we will, keep the place tidy, and don&apos;t leave
+                until you&apos;re happy with the result.
               </p>
               <p>
-                Every job is covered by our{" "}
-                {site.guaranteeYears}-year workmanship guarantee — so you can
-                book with total confidence.
+                Whether you need a fresh coat in one room or a complete
+                repaint, give us a call and we&apos;ll sort you out with a
+                free, no-obligation quote.
               </p>
             </div>
           </div>
@@ -100,13 +99,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Gallery — PLACEHOLDER photos, swap for real project shots */}
+      {/* Gallery */}
       <section className="py-20">
         <div className="container">
           <SectionHeading
             eyebrow="Recent work"
-            title="A few finishes we're proud of"
-            sub="Real projects from around the area — see more on the home page."
+            title="A few finishes we&apos;re proud of"
+            sub="Real projects from around Ireland — see more on the home page."
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -132,7 +131,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <ReviewsSection />
       <CtaBand />
     </>
   );
