@@ -102,8 +102,8 @@ export default function BeforeAfterSection() {
                     fill
                     className="object-cover"
                   />
-                  <span className="absolute left-4 top-4 rounded-full bg-red-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                    Before
+                  <span className="absolute left-4 top-4 rounded-full bg-amber-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
+                    During
                   </span>
                 </div>
               </figure>
