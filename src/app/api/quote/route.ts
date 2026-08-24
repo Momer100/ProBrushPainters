@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { site } from "@/config/site";
 
+export const maxDuration = 60; // Allow more time for SMTP when there are attachments
+
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();

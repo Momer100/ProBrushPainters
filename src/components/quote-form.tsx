@@ -128,16 +128,25 @@ export default function QuoteForm() {
         body: formData,
       });
 
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        setSubmitted(true);
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        if (res.ok && data.success) {
+          setSubmitted(true);
+        } else {
+          setError(data.message || "Failed to submit quote request. Please try calling us directly.");
+        }
       } else {
-        setError(data.message || "Failed to submit quote request. Please try calling us directly.");
+        // Not a JSON response, likely an HTML error page (e.g. 413 Payload Too Large)
+        if (res.status === 413) {
+          setError("The photos you attached are too large. Please try sending fewer photos, or smaller ones.");
+        } else {
+          setError(`Server error (${res.status}). Please try calling us or using WhatsApp.`);
+        }
       }
     } catch (err) {
       console.error(err);
-      setError("Something went wrong. Please check your internet connection or call us.");
+      setError("Network error. Please check your internet connection or call us directly.");
     } finally {
       setLoading(false);
     }

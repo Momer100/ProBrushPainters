@@ -1,75 +1,114 @@
 import type { Metadata } from "next";
-import { Phone } from "lucide-react";
-import { site } from "@/config/site";
+import { Clock, Mail, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { site, whatsappLink } from "@/config/site";
 import QuoteForm from "@/components/quote-form";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Get a Free Quote",
-  description: `Get an instant estimated quote or call ${site.name} for a free, no-obligation painting quote. We serve all of Ireland.`,
+  description: `Request a free, no-obligation painting quote from ${site.name}. Send photos of your job and get a fixed-price quote within 24 hours.`,
 };
 
 export default function GetAQuotePage() {
   return (
     <section className="py-12 lg:py-20">
-      <div className="container max-w-5xl">
+      <div className="container">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-accent">
             Free quote
           </p>
           <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-primary text-balance sm:text-4xl">
-            Get an Estimate &amp; Free Quote
+            Tell us about your job
           </h1>
           <p className="mt-4 text-muted-foreground">
-            Fill in the quick form below for an instant estimated starting price and upload photos for an exact quote, or call us directly.
+            Answer a few quick questions and we&apos;ll come back with a clear,
+            fixed-price quote — usually within 24 hours. No obligation.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-12 items-start">
-          {/* Interactive Form */}
-          <div className="lg:col-span-8">
-            <QuoteForm />
+        <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-[1fr_1.25fr]">
+          {/* Contact options */}
+          <div className="flex flex-col gap-4">
+            <Card>
+              <CardContent className="flex flex-col gap-4 p-6">
+                <h2 className="text-lg font-extrabold text-primary">
+                  Prefer to talk it through?
+                </h2>
+
+                <a
+                  href={`tel:${site.phoneHref}`}
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 transition-colors hover:border-accent"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15">
+                    <Phone className="h-5 w-5 text-accent" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-extrabold text-primary">
+                      Call us
+                    </span>
+                    <span className="block text-sm text-muted-foreground">
+                      {site.phoneDisplay}
+                    </span>
+                  </span>
+                </a>
+
+                <a
+                  href={whatsappLink(
+                    `Hi ${site.name}, I'd like a quote for a painting job.`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 transition-colors hover:border-accent"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15">
+                    <MessageCircle className="h-5 w-5 text-accent" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-extrabold text-primary">
+                      WhatsApp us
+                    </span>
+                    <span className="block text-sm text-muted-foreground">
+                      Easy to attach photos of the job
+                    </span>
+                  </span>
+                </a>
+
+                <a
+                  href={`mailto:${site.email}`}
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 transition-colors hover:border-accent"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15">
+                    <Mail className="h-5 w-5 text-accent" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-extrabold text-primary">
+                      Email us
+                    </span>
+                    <span className="block text-sm text-muted-foreground">
+                      {site.email}
+                    </span>
+                  </span>
+                </a>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="flex flex-col gap-3 text-sm p-6">
+                <p className="flex items-center gap-2.5 text-foreground/80">
+                  <Clock className="h-4 w-4 shrink-0 text-accent" />
+                  Call anytime for a free quote
+                </p>
+                <p className="flex items-center gap-2.5 text-foreground/80">
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-accent" />
+                  Fully insured · {site.stats.years}+ years experience
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Side Call Card */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="rounded-2xl border border-border bg-primary text-primary-foreground p-6 sm:p-8 shadow-lift">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/20 text-accent mb-4">
-                <Phone className="h-6 w-6" />
-              </div>
-              <h2 className="text-xl font-extrabold">Prefer to Call?</h2>
-              <p className="mt-2 text-sm text-primary-foreground/80 leading-relaxed">
-                Speak directly with our team right now for an immediate price estimate or advice.
-              </p>
-              <a
-                href={`tel:${site.phoneHref}`}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-base font-extrabold text-white shadow-md hover:opacity-90 transition-opacity"
-              >
-                <Phone className="h-4 w-4" />
-                {site.phoneDisplay}
-              </a>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-white p-6 shadow-soft">
-              <h3 className="text-base font-extrabold text-primary">Why Get a Quote From Us?</h3>
-              <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  Clear, honest pricing starting from ~€300/room
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  Attach photos for a 100% exact quote
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  No obligation &amp; no hidden extras
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  {site.stats.years}+ years painting experience in Ireland
-                </li>
-              </ul>
-            </div>
+          {/* Interactive quote form */}
+          <div className="overflow-hidden">
+            <QuoteForm />
           </div>
         </div>
       </div>
