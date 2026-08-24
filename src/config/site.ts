@@ -18,6 +18,7 @@ export const site = {
   phoneHref: "+353861253342", // used by tel: links
   whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
+  quoteEmail: "momer892400@gmail.com", // Email recipient for quote form submissions (test email)
   addressLine: "Ireland",
 
   // ── Trust signals ──

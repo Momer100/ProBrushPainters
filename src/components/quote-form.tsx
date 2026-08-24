@@ -1,343 +1,421 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Camera, Mail, MessageCircle, Phone, RotateCcw } from "lucide-react";
-import { emailLink, site, whatsappLink } from "@/config/site";
-import { LogoMark } from "@/components/logo";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { useState } from "react";
+import {
+  CheckCircle2,
+  Image as ImageIcon,
+  Loader2,
+  Phone,
+  Upload,
+  X,
+  Sparkles,
+} from "lucide-react";
+import { site } from "@/config/site";
+import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
-type Answers = {
-  service?: string;
-  property?: string;
-  rooms?: string;
-  timeframe?: string;
-  details?: string;
-  name?: string;
-  phone?: string;
-  email?: string;
-  area?: string;
+type JobOption = {
+  id: string;
+  title: string;
+  estimate: string;
+  startingPrice: number;
+  description: string;
 };
 
-type Step = {
-  key: keyof Answers;
-  question: string;
-  type: "chips" | "input" | "textarea";
-  options?: readonly string[];
-  placeholder?: string;
-  optional?: boolean;
-};
-
-const steps: Step[] = [
+const JOB_OPTIONS: JobOption[] = [
   {
-    key: "service",
-    question: "Hi there! What can we paint for you?",
-    type: "chips",
-    options: [
-      "Interior painting",
-      "Exterior painting",
-      "Kitchen cabinets",
-      "Commercial",
-      "Wallpapering",
-      "Something else",
-    ],
+    id: "1_bedroom",
+    title: "1 Room / Bedroom",
+    estimate: "~€300",
+    startingPrice: 300,
+    description: "Walls, ceiling & trim for 1 standard room",
   },
   {
-    key: "property",
-    question: "Great choice. What type of property is it?",
-    type: "chips",
-    options: ["House", "Apartment", "Commercial space", "Other"],
+    id: "2_3_rooms",
+    title: "2–3 Rooms",
+    estimate: "~€550 – €850",
+    startingPrice: 550,
+    description: "Multiple bedrooms, living room, or hallway",
   },
   {
-    key: "rooms",
-    question: "Roughly how many rooms or areas?",
-    type: "chips",
-    options: ["1", "2", "3", "4", "5+"],
+    id: "full_house",
+    title: "Full House Interior",
+    estimate: "~€1,200+",
+    startingPrice: 1200,
+    description: "Complete interior repainting",
   },
   {
-    key: "timeframe",
-    question: "And when would you like it done?",
-    type: "chips",
-    options: ["As soon as possible", "In the next few weeks", "1–3 months", "I'm flexible"],
+    id: "kitchen_cabinets",
+    title: "Kitchen Cabinets",
+    estimate: "~€750+",
+    startingPrice: 750,
+    description: "Professional respraying / painting of cabinets",
   },
   {
-    key: "details",
-    question:
-      "Anything else we should know? Colours you have in mind, condition of the walls, access…",
-    type: "textarea",
-    placeholder: "Optional — the more detail, the sharper the quote.",
-    optional: true,
+    id: "doors_trim",
+    title: "Doors & Woodwork / Trim",
+    estimate: "~€250+",
+    startingPrice: 250,
+    description: "Skirting, architraves, doors & frames",
   },
   {
-    key: "name",
-    question: "Almost done! What's your name?",
-    type: "input",
-    placeholder: "Your name",
-  },
-  {
-    key: "phone",
-    question: "Best phone number to reach you on?",
-    type: "input",
-    placeholder: "08x xxx xxxx",
-  },
-  {
-    key: "email",
-    question: "And your email? (so we can send the written quote)",
-    type: "input",
-    placeholder: "you@email.com",
-    optional: true,
-  },
-  {
-    key: "area",
-    question: "Last one — where is the property?",
-    type: "input",
-    placeholder: "e.g. Ranelagh, Dublin",
+    id: "exterior",
+    title: "Exterior Painting",
+    estimate: "Custom quote",
+    startingPrice: 0,
+    description: "Masonry, window frames, fascia & soffit",
   },
 ];
 
-function buildMessage(a: Answers) {
-  return [
-    `Hi ${site.name}, I'd like a free quote please.`,
-    ``,
-    `Service: ${a.service}`,
-    `Property: ${a.property}`,
-    `Rooms/areas: ${a.rooms}`,
-    `Timeframe: ${a.timeframe}`,
-    a.details ? `Details: ${a.details}` : null,
-    ``,
-    `Name: ${a.name}`,
-    `Phone: ${a.phone}`,
-    a.email ? `Email: ${a.email}` : null,
-    `Area: ${a.area}`,
-  ]
-    .filter((line) => line !== null)
-    .join("\n");
-}
-
 export default function QuoteForm() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [draft, setDraft] = useState("");
+  const [selectedJob, setSelectedJob] = useState<string>("1_bedroom");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [location, setLocation] = useState("");
+  const [details, setDetails] = useState("");
+  const [photos, setPhotos] = useState<File[]>([]);
+
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const done = step >= steps.length;
-  const current = steps[step];
-  const progress = Math.min(100, Math.round((step / steps.length) * 100));
+  const currentJob = JOB_OPTIONS.find((j) => j.id === selectedJob) || JOB_OPTIONS[0];
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [step, done]);
-
-  function answer(value: string) {
-    setError("");
-    setAnswers((prev) => ({ ...prev, [current.key]: value }));
-    setDraft("");
-    setStep((s) => s + 1);
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      setPhotos((prev) => [...prev, ...newFiles]);
+    }
   }
 
-  function submitDraft() {
-    const value = draft.trim();
-    if (!value) {
-      if (current.optional) {
-        answer(current.type === "textarea" ? "—" : "Not provided");
-        return;
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (!phone.trim() || phone.trim().length < 7) {
+      setError("Please enter a valid phone number so we can contact you.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("service", currentJob.title);
+      formData.append("scope", currentJob.description);
+      formData.append("estimatedPrice", currentJob.estimate);
+      formData.append("name", name.trim());
+      formData.append("phone", phone.trim());
+      formData.append("email", email.trim());
+      formData.append("location", location.trim());
+      formData.append("details", details.trim());
+
+      photos.forEach((file) => {
+        formData.append("photos", file);
+      });
+
+      const res = await fetch("/api/quote", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        setError(data.message || "Failed to submit quote request. Please try calling us directly.");
       }
-      setError("Just fill this in and we'll continue.");
-      return;
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong. Please check your internet connection or call us.");
+    } finally {
+      setLoading(false);
     }
-    if (current.key === "phone" && value.replace(/\D/g, "").length < 7) {
-      setError("That phone number looks a little short — mind checking it?");
-      return;
-    }
-    if (current.key === "email" && !/^\S+@\S+\.\S+$/.test(value)) {
-      setError("That email doesn't look quite right — mind checking it?");
-      return;
-    }
-    answer(value);
   }
 
-  function restart() {
-    setStep(0);
-    setAnswers({});
-    setDraft("");
-    setError("");
-  }
+  if (submitted) {
+    return (
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-8 text-center shadow-lift">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <CheckCircle2 className="h-10 w-10" />
+        </div>
+        <h3 className="mt-5 text-2xl font-extrabold text-primary">
+          Quote Request Received!
+        </h3>
+        <p className="mt-3 text-base text-muted-foreground max-w-lg mx-auto">
+          Thank you, <span className="font-semibold text-primary">{name}</span>. We&apos;ve received your job details and photos.
+          Our team will review them and contact you shortly by phone or email with your exact price.
+        </p>
 
-  const message = done ? buildMessage(answers) : "";
+        <div className="mt-8 rounded-xl bg-white p-6 shadow-soft border border-border inline-block max-w-sm w-full text-left">
+          <p className="text-xs font-bold uppercase tracking-wider text-accent">Summary</p>
+          <p className="mt-1 text-sm font-bold text-primary">{currentJob.title}</p>
+          <p className="text-xs text-muted-foreground">Estimated starting range: <span className="font-semibold text-amber-600">{currentJob.estimate}</span></p>
+          {photos.length > 0 && (
+            <p className="mt-2 text-xs font-medium text-emerald-700 flex items-center gap-1.5">
+              <ImageIcon className="h-3.5 w-3.5" /> {photos.length} photo(s) attached
+            </p>
+          )}
+        </div>
+
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href={`tel:${site.phoneHref}`}
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-base font-bold text-white shadow-md hover:opacity-90 transition-opacity"
+          >
+            <Phone className="h-4 w-4" />
+            Call Us Now: {site.phoneDisplay}
+          </a>
+          <button
+            onClick={() => {
+              setSubmitted(false);
+              setPhotos([]);
+              setName("");
+              setPhone("");
+              setEmail("");
+              setDetails("");
+            }}
+            className="text-xs font-semibold text-muted-foreground hover:text-primary underline py-2"
+          >
+            Submit Another Request
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lift">
-      {/* Chat header */}
-      <div className="flex items-center gap-3 border-b border-border bg-white px-5 py-4">
-        <LogoMark className="h-9 w-9" />
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-extrabold text-primary">
-            {site.name} quote assistant
-          </p>
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
-            Replies within 24 hours
-          </p>
-        </div>
-        <p className="text-xs font-bold text-muted-foreground">
-          {done ? "Done" : `Step ${step + 1} of ${steps.length}`}
+    <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-lift">
+      <div className="border-b border-border pb-6">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/15 px-3 py-1 text-xs font-extrabold text-accent">
+          <Sparkles className="h-3.5 w-3.5" /> Instant Estimate &amp; Free Quote
+        </span>
+        <h2 className="mt-3 text-2xl font-extrabold text-primary">
+          Get a Quick Quote for Your Job
+        </h2>
+        <p className="mt-1.5 text-sm text-muted-foreground">
+          Select what needs to be painted for an instant estimated starting price, then attach photos for an exact quote.
         </p>
       </div>
 
-      {/* Progress bar */}
-      <div className="h-1 w-full bg-muted">
-        <div
-          className="h-1 bg-accent transition-all duration-500"
-          style={{ width: `${done ? 100 : progress}%` }}
-        />
-      </div>
-
-      {/* Messages */}
-      <div className="flex max-h-[26rem] min-h-[20rem] flex-col gap-3 overflow-y-auto bg-muted/40 px-5 py-6">
-        {steps.slice(0, step).map((s) => (
-          <div key={s.key} className="contents">
-            <Bubble>{s.question}</Bubble>
-            <Bubble user>{String(answers[s.key] ?? "")}</Bubble>
+      <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        {/* Step 1: Select Job Type */}
+        <div>
+          <label className="block text-sm font-extrabold text-primary mb-3">
+            1. Select What Needs Painting
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {JOB_OPTIONS.map((job) => {
+              const active = job.id === selectedJob;
+              return (
+                <button
+                  type="button"
+                  key={job.id}
+                  onClick={() => setSelectedJob(job.id)}
+                  className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
+                    active
+                      ? "border-accent bg-accent/5 ring-2 ring-accent/20 shadow-soft"
+                      : "border-border hover:border-primary/40 bg-white"
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-extrabold text-primary">{job.title}</p>
+                      <span className="text-xs font-black text-accent bg-accent/10 px-2 py-0.5 rounded-md">
+                        {job.estimate}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      {job.description}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
-        ))}
+        </div>
 
-        {!done && current && <Bubble>{current.question}</Bubble>}
-
-        {done && (
-          <Bubble>
-            Thanks {answers.name}! Your request is ready to send. Tap one of the
-            options below — and do attach a few photos if you can, they really
-            speed up your quote. 📸
-          </Bubble>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      {/* Controls */}
-      <div className="border-t border-border bg-white p-4">
-        {!done && current && (
-          <>
-            {current.type === "chips" ? (
-              <div className="flex flex-wrap gap-2">
-                {current.options?.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => answer(option)}
-                    className="rounded-full border-2 border-primary/15 px-4 py-2 text-sm font-bold text-primary transition-all hover:border-accent hover:bg-accent/10"
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {current.type === "textarea" ? (
-                  <Textarea
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    placeholder={current.placeholder}
-                  />
-                ) : (
-                  <Input
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    placeholder={current.placeholder}
-                    onKeyDown={(e) => e.key === "Enter" && submitDraft()}
-                    autoFocus
-                  />
-                )}
-                {error && (
-                  <p className="text-xs font-semibold text-destructive">
-                    {error}
-                  </p>
-                )}
-                <div className="flex gap-2">
-                  <Button
-                    variant="accent"
-                    className="flex-1"
-                    onClick={submitDraft}
-                  >
-                    {current.optional ? "Skip or send" : "Send"}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {done && (
-          <div className="flex flex-col gap-2.5">
-            <a
-              href={whatsappLink(message)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonVariants({
-                variant: "accent",
-                size: "lg",
-                className: "w-full",
-              })}
-            >
-              <MessageCircle className="h-5 w-5" />
-              Send via WhatsApp (fastest)
-            </a>
-            <a
-              href={emailLink(
-                `Quote request — ${answers.service} (${answers.name})`,
-                message
-              )}
-              className={buttonVariants({
-                variant: "outline",
-                className: "w-full",
-              })}
-            >
-              <Mail className="h-4 w-4" />
-              Send via Email
-            </a>
-            <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-              <Camera className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-              You&apos;ll be able to attach photos of the job right inside
-              WhatsApp or your email app after tapping send.
+        {/* Dynamic Estimated Price Banner */}
+        <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800">
+              Instant Estimated Starting Price
             </p>
-            <div className="flex items-center justify-between pt-1">
-              <a
-                href={`tel:${site.phoneHref}`}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-accent"
-              >
-                <Phone className="h-4 w-4" /> Prefer to call? {site.phoneDisplay}
-              </a>
-              <button
-                onClick={restart}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary"
-              >
-                <RotateCcw className="h-3.5 w-3.5" /> Start over
-              </button>
+            <p className="text-xl font-extrabold text-amber-900 mt-0.5">
+              {currentJob.estimate}
+            </p>
+            <p className="text-xs text-amber-800/80">
+              *Starting estimate for {currentJob.title.toLowerCase()}. Upload photos below for an exact fixed price.
+            </p>
+          </div>
+          <span className="text-xs font-bold text-accent bg-white px-3 py-1.5 rounded-lg border border-amber-200 shadow-xs shrink-0">
+            Cheap &amp; Transparent Rates
+          </span>
+        </div>
+
+        {/* Step 2: Upload Photos */}
+        <div>
+          <label className="block text-sm font-extrabold text-primary mb-1">
+            2. Upload Photos for Exact Quote <span className="text-xs font-normal text-muted-foreground">(Optional but recommended)</span>
+          </label>
+          <p className="text-xs text-muted-foreground mb-3">
+            Attach photos of the room, walls, or surfaces so we can give you a precise fixed price.
+          </p>
+
+          <div className="relative rounded-xl border-2 border-dashed border-border bg-muted/30 p-6 text-center hover:border-accent transition-colors">
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            />
+            <div className="flex flex-col items-center">
+              <Upload className="h-8 w-8 text-accent mb-2" />
+              <p className="text-sm font-bold text-primary">
+                Click or drag &amp; drop photos here
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Upload room, wall, or cabinet photos (PNG, JPG, WebP)
+              </p>
             </div>
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
-function Bubble({
-  children,
-  user = false,
-}: {
-  children: React.ReactNode;
-  user?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm",
-        user
-          ? "self-end rounded-br-sm bg-primary text-primary-foreground"
-          : "self-start rounded-tl-sm border border-border bg-white text-foreground"
-      )}
-    >
-      {children}
+          {/* Photo Thumbnails */}
+          {photos.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              {photos.map((file, idx) => (
+                <div
+                  key={idx}
+                  className="relative flex items-center gap-2 rounded-lg border border-border bg-white p-2 text-xs shadow-xs"
+                >
+                  <ImageIcon className="h-4 w-4 text-accent shrink-0" />
+                  <span className="truncate max-w-[140px] font-medium text-foreground">
+                    {file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(idx)}
+                    className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Step 3: Contact Details */}
+        <div className="space-y-4 pt-2 border-t border-border">
+          <label className="block text-sm font-extrabold text-primary">
+            3. Where Should We Send Your Exact Quote?
+          </label>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground mb-1">
+                Your Name <span className="text-destructive">*</span>
+              </label>
+              <Input
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground mb-1">
+                Phone Number <span className="text-destructive">*</span>
+              </label>
+              <Input
+                type="tel"
+                placeholder="086 123 4567"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground mb-1">
+                Email Address <span className="text-xs font-normal text-muted-foreground">(For written quote)</span>
+              </label>
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-muted-foreground mb-1">
+                Location / Town
+              </label>
+              <Input
+                type="text"
+                placeholder="e.g. Dublin, Kildare, Meath"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-muted-foreground mb-1">
+              Job Notes / Wall Condition / Paint Colors
+            </label>
+            <Textarea
+              placeholder="Tell us any details (e.g., walls need minor filling, prefer white ceiling & grey walls, timeframe…)"
+              value={details}
+              onChange={(e) => setDetails(e.target.value)}
+              rows={3}
+            />
+          </div>
+        </div>
+
+        {error && (
+          <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs font-bold text-destructive">
+            {error}
+          </div>
+        )}
+
+        {/* Submit button */}
+        <div className="pt-2">
+          <Button
+            type="submit"
+            variant="accent"
+            size="lg"
+            disabled={loading}
+            className="w-full text-base font-extrabold py-4 shadow-lift"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                Sending Quote Request...
+              </>
+            ) : (
+              `Send Request for Exact Quote (${photos.length > 0 ? `${photos.length} Photo${photos.length > 1 ? "s" : ""}` : "No photos"})`
+            )}
+          </Button>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            Fast response · No obligation · Sent directly to our team
+          </p>
+        </div>
+      </form>
     </div>
   );
 }
