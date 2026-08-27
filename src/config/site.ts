@@ -19,6 +19,11 @@ export const site = {
   whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
   quoteEmail: "momer892400@gmail.com", // Email recipient for quote form submissions (test email)
+  // Resend "from" address. Until probrushpainters.ie is verified in Resend, use the
+  // sandbox sender below (it only delivers to the email your Resend account signed up with).
+  // After verifying the domain in Resend, change this to:
+  //   "ProBrush Painters <quotes@probrushpainters.ie>"
+  quoteFrom: "ProBrush Painters <onboarding@resend.dev>",
   addressLine: "Ireland",
 
   // ── Trust signals ──

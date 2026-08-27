@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { site } from "@/config/site";
 
-export const maxDuration = 60; // Allow more time for SMTP when there are attachments
+export const runtime = "nodejs"; // Buffer attachments require the Node.js runtime
+export const maxDuration = 60; // Allow more time to send when there are photo attachments
 
 export async function POST(req: Request) {
   try {
@@ -74,35 +75,35 @@ export async function POST(req: Request) {
       </div>
     `;
 
-    // Configure Nodemailer SMTP transporter
-    const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
-    const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-    const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER;
-    const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+    // Send via Resend. The API key is injected by the Vercel Resend integration.
+    const apiKey = process.env.RESEND_API_KEY;
 
-    if (smtpUser && smtpPass) {
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
+    if (apiKey) {
+      const resend = new Resend(apiKey);
 
-      await transporter.sendMail({
-        from: `"${site.name} Quote Form" <${smtpUser}>`,
+      const { error } = await resend.emails.send({
+        from: site.quoteFrom,
         to: recipientEmail,
         replyTo: email !== "Not provided" ? email : undefined,
         subject: `New Quote Request (${service} - ${name})`,
         html: htmlBody,
-        attachments: attachments,
+        attachments: attachments.map((a) => ({
+          filename: a.filename,
+          content: a.content,
+        })),
       });
+
+      if (error) {
+        console.error("[Quote API] Resend error:", error);
+        return NextResponse.json(
+          { success: false, message: error.message || "Failed to send email" },
+          { status: 500 }
+        );
+      }
 
       console.log(`[Quote Form] Email successfully sent to ${recipientEmail}`);
     } else {
-      // Fallback log if SMTP credentials aren't set in ENV yet
+      // Fallback log if RESEND_API_KEY isn't set in ENV yet (e.g. local dev)
       console.log(`[Quote Form] Received submission for ${recipientEmail}:`, {
         name,
         phone,
