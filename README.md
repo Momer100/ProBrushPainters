@@ -64,7 +64,15 @@ Every push to `main` after that auto-deploys.
 
 ## How the quote form works
 
-No backend required: the form collects the job details step-by-step, then opens
-WhatsApp (or the visitor's email app) with everything pre-filled — photos can be
-attached right there. To change where requests go, edit the phone/WhatsApp/email
-in `src/config/site.ts`.
+The form collects the job details step-by-step (service, photos, contact info), then
+POSTs to the `/api/quote` route, which emails the request — with the photos attached —
+via **Resend** to `site.quoteEmail`. Photos are compressed in the browser before upload
+to stay under Vercel's ~4.5 MB request limit.
+
+**Required env var:** set `RESEND_API_KEY` in Vercel (**Settings → Environment
+Variables**) for the form to send. The Resend Marketplace integration usually adds it
+automatically. Without it, submissions are logged but no email is sent.
+
+The sender address (`quoteFrom`) and recipient (`quoteEmail`) live in
+`src/config/site.ts`. The `quoteFrom` domain must be **Verified in Resend**. The page
+also offers WhatsApp / call / email options for visitors who prefer them.

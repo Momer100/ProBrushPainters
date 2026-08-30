@@ -22,6 +22,62 @@ type JobOption = {
   description: string;
 };
 
+// Shrink a photo in the browser before upload. Vercel serverless functions reject
+// request bodies over ~4.5 MB, and phone photos are often 3–5 MB each, so we resize
+// the longest edge to <= MAX_EDGE and re-encode as JPEG. On any failure (e.g. an
+// undecodable HEIC), we fall back to the original file so submission never breaks.
+const MAX_EDGE = 2048;
+const JPEG_QUALITY = 0.82;
+
+function compressImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    // Only images can be drawn to a canvas; pass anything else through untouched.
+    if (!file.type.startsWith("image/")) {
+      resolve(file);
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const { width, height } = img;
+      const scale = Math.min(1, MAX_EDGE / Math.max(width, height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(file);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+          const newName = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+          resolve(new File([blob], newName, { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        JPEG_QUALITY
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file); // fall back to the original if it can't be decoded
+    };
+
+    img.src = url;
+  });
+}
+
 const JOB_OPTIONS: JobOption[] = [
   {
     id: "1_bedroom",
@@ -119,7 +175,9 @@ export default function QuoteForm() {
       formData.append("location", location.trim());
       formData.append("details", details.trim());
 
-      photos.forEach((file) => {
+      // Compress photos client-side so the upload stays under Vercel's ~4.5 MB limit.
+      const compressed = await Promise.all(photos.map(compressImage));
+      compressed.forEach((file) => {
         formData.append("photos", file);
       });
 

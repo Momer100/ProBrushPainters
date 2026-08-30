@@ -19,11 +19,10 @@ export const site = {
   whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
   quoteEmail: "momer892400@gmail.com", // Email recipient for quote form submissions (test email)
-  // Resend "from" address. Until probrushpainters.ie is verified in Resend, use the
-  // sandbox sender below (it only delivers to the email your Resend account signed up with).
-  // After verifying the domain in Resend, change this to:
-  //   "ProBrush Painters <quotes@probrushpainters.ie>"
-  quoteFrom: "ProBrush Painters <onboarding@resend.dev>",
+  // Resend "from" address — sends from the verified probrushpainters.ie domain.
+  // No mailbox is needed at quotes@ to send; customer replies go to their own email
+  // (the API route sets replyTo). Requires RESEND_API_KEY set in Vercel env.
+  quoteFrom: "ProBrush Painters <quotes@probrushpainters.ie>",
   addressLine: "Ireland",
 
   // ── Trust signals ──
