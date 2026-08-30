@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { site } from "@/config/site";
+import { slugify } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 
 export default function SiteFooter() {
@@ -96,6 +97,33 @@ export default function SiteFooter() {
               {site.addressLine}
             </li>
           </ul>
+        </div>
+      </div>
+
+      {/* Areas we serve — internal links for local SEO */}
+      <div className="border-t border-white/10">
+        <div className="container py-8">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-primary-foreground/60">
+            Areas we serve
+          </h3>
+          <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            {site.locations.map((loc) => (
+              <li key={loc.name}>
+                <Link
+                  href={`/painters/${slugify(loc.name)}/`}
+                  className="text-primary-foreground/85 transition-colors hover:text-accent"
+                >
+                  Painters {loc.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/painters/"
+            className="mt-4 inline-block text-sm font-bold text-accent hover:underline"
+          >
+            View all areas we cover →
+          </Link>
         </div>
       </div>
 

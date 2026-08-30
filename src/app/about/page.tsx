@@ -15,6 +15,7 @@ import CtaBand from "@/components/cta-band";
 export const metadata: Metadata = {
   title: "About Us",
   description: `Meet ${site.name} — a professional painting and decorating team serving all of Ireland with ${site.stats.years}+ years of experience.`,
+  alternates: { canonical: "/about/" },
 };
 
 const valueIcons: Record<string, LucideIcon> = {
@@ -32,6 +33,7 @@ export default function AboutPage() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <div>
             <SectionHeading
+              as="h1"
               center={false}
               eyebrow="About us"
               title="A painting team you can trust"

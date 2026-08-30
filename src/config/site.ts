@@ -10,7 +10,7 @@ export const site = {
   name: "ProBrush Painters",
   tagline: "Painting & Decorating",
   domain: "probrushpainters.ie",
-  url: "https://probrushpainters.ie",
+  url: "https://www.probrushpainters.ie", // canonical production domain (apex 308-redirects to www)
   location: "Ireland", // used in headlines & SEO
 
   // ── Contact details (PLACEHOLDERS — replace with real ones) ──
@@ -113,6 +113,71 @@ export const site = {
       area: "Blackrock",
       text: "Fast quote, fair price, brilliant result. They protected everything and left the house spotless each evening. Will definitely use again.",
     },
+  ] as const,
+
+  // ── Location pages (local SEO) ──
+  // Each entry generates its own /painters/{slug}/ page. Keep to REAL towns
+  // (one page per distinct place — no postcode ranges or duplicate city names).
+  // County is used for unique page titles/content so pages aren't near-identical.
+  locations: [
+    // County Dublin
+    { name: "Dublin City", county: "Dublin" },
+    { name: "Ranelagh", county: "Dublin" },
+    { name: "Ballsbridge", county: "Dublin" },
+    { name: "Clontarf", county: "Dublin" },
+    { name: "Drumcondra", county: "Dublin" },
+    { name: "Dundrum", county: "Dublin" },
+    { name: "Stillorgan", county: "Dublin" },
+    { name: "Blackrock", county: "Dublin" },
+    { name: "Dún Laoghaire", county: "Dublin" },
+    { name: "Dalkey", county: "Dublin" },
+    { name: "Malahide", county: "Dublin" },
+    { name: "Howth", county: "Dublin" },
+    { name: "Swords", county: "Dublin" },
+    { name: "Tallaght", county: "Dublin" },
+    { name: "Lucan", county: "Dublin" },
+    { name: "Blanchardstown", county: "Dublin" },
+    // County Wicklow
+    { name: "Bray", county: "Wicklow" },
+    { name: "Greystones", county: "Wicklow" },
+    { name: "Wicklow", county: "Wicklow" },
+    { name: "Arklow", county: "Wicklow" },
+    // County Kildare
+    { name: "Naas", county: "Kildare" },
+    { name: "Newbridge", county: "Kildare" },
+    { name: "Celbridge", county: "Kildare" },
+    { name: "Maynooth", county: "Kildare" },
+    { name: "Kildare", county: "Kildare" },
+    // County Louth
+    { name: "Drogheda", county: "Louth" },
+    { name: "Dundalk", county: "Louth" },
+    // County Meath
+    { name: "Navan", county: "Meath" },
+    { name: "Trim", county: "Meath" },
+    // Midlands
+    { name: "Mullingar", county: "Westmeath" },
+    { name: "Tullamore", county: "Offaly" },
+    { name: "Portlaoise", county: "Laois" },
+    // South-east
+    { name: "Kilkenny", county: "Kilkenny" },
+    { name: "Carlow", county: "Carlow" },
+    { name: "Wexford", county: "Wexford" },
+    // Munster
+    { name: "Cork", county: "Cork" },
+    { name: "Limerick", county: "Limerick" },
+    { name: "Waterford", county: "Waterford" },
+    { name: "Tralee", county: "Kerry" },
+    { name: "Killarney", county: "Kerry" },
+    { name: "Ennis", county: "Clare" },
+    // Connacht
+    { name: "Galway", county: "Galway" },
+    { name: "Tuam", county: "Galway" },
+    { name: "Sligo", county: "Sligo" },
+    { name: "Castlebar", county: "Mayo" },
+    // Ulster (RoI)
+    { name: "Monaghan", county: "Monaghan" },
+    { name: "Cavan", county: "Cavan" },
+    { name: "Letterkenny", county: "Donegal" },
   ] as const,
 
   // ── Areas served (PLACEHOLDERS — replace with the real list) ──

@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: `Contact ${site.name} for all your painting and decorating needs across Ireland. Call us today for a free quote.`,
+  alternates: { canonical: "/contact/" },
 };
 
 export default function ContactPage() {
@@ -18,6 +19,7 @@ export default function ContactPage() {
       <section className="py-16 lg:py-24">
         <div className="container">
           <SectionHeading
+            as="h1"
             eyebrow="Get in touch"
             title="Contact Us"
             sub="Give us a call — we're happy to answer any questions and arrange a free quote."

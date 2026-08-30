@@ -18,6 +18,8 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description: `Professional painting & decorating across ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. Get a free quote today.`,
+  // Default canonical for the home page; other pages override via their own metadata.
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: site.url,
@@ -25,6 +27,22 @@ export const metadata: Metadata = {
     title: `${site.name} | Painters & Decorators in ${site.location}`,
     description: `A flawless finish, guaranteed. Professional painters & decorators serving ${site.location} and surrounding areas.`,
     images: ["/images/s-l1600 (23).jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} | Painters & Decorators in ${site.location}`,
+    description: `A flawless finish, guaranteed. Professional painters & decorators serving ${site.location} and surrounding areas.`,
+    images: ["/images/s-l1600 (23).jpg"],
+  },
+  // Search-engine ownership verification. Paste the codes into Vercel env vars
+  // (NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION / NEXT_PUBLIC_BING_SITE_VERIFICATION) when
+  // you register the site in Google Search Console / Bing Webmaster Tools. Bing can
+  // also simply "Import from Google Search Console" instead of using a code here.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : {},
   },
 };
 

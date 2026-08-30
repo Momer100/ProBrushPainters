@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = {
   title: "Get a Free Quote",
   description: `Request a free, no-obligation painting quote from ${site.name}. Send photos of your job and get a fixed-price quote within 24 hours.`,
+  alternates: { canonical: "/get-a-quote/" },
 };
 
 export default function GetAQuotePage() {

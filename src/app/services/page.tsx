@@ -19,6 +19,7 @@ import ProcessSection from "@/components/process-section";
 export const metadata: Metadata = {
   title: "Our Services",
   description: `Comprehensive painting and decorating services in ${site.location}. Interior, exterior, commercial painting, and kitchen cabinet respraying.`,
+  alternates: { canonical: "/services/" },
 };
 
 const icons: Record<string, LucideIcon> = {
@@ -36,6 +37,7 @@ export default function ServicesPage() {
       <section className="py-16 lg:py-24">
         <div className="container">
           <SectionHeading
+            as="h1"
             eyebrow="What we do"
             title="Painting & Decorating Services"
             sub="Every job, big or small, gets the same care: proper preparation, premium paints and a spotless tidy-up."
