@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 const nav = [
   { href: "/", label: "Home" },
   { href: "/services/", label: "Services" },
+  { href: "/painters/", label: "Areas" },
   { href: "/#work", label: "Our Work" },
   { href: "/about/", label: "About Us" },
   { href: "/contact/", label: "Contact" },

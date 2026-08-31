@@ -18,7 +18,7 @@ export const site = {
   phoneHref: "+353861253342", // used by tel: links
   whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
-  quoteEmail: "momer892400@gmail.com", // Email recipient for quote form submissions (test email)
+  quoteEmail: "info@probrushpainters.ie", // Live business inbox — receives quote form submissions
   // Resend "from" address — sends from the verified probrushpainters.ie domain.
   // No mailbox is needed at quotes@ to send; customer replies go to their own email
   // (the API route sets replyTo). Requires RESEND_API_KEY set in Vercel env.

@@ -7,10 +7,12 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { site } from "@/config/site";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
 import CtaBand from "@/components/cta-band";
+import RelatedAreas from "@/components/related-areas";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -40,11 +42,23 @@ export default function AboutPage() {
             />
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
               <p>
-                {site.name} is a professional painting and decorating team with
-                over {site.stats.years} years of experience working across
-                Ireland. We handle everything from single rooms and feature
-                walls to full interior and exterior projects for homes and
-                commercial spaces.
+                {site.name} is a professional{" "}
+                <Link
+                  href="/services/"
+                  className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+                >
+                  painting and decorating
+                </Link>{" "}
+                team with over {site.stats.years} years of experience working{" "}
+                <Link
+                  href="/painters/"
+                  className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+                >
+                  across Ireland
+                </Link>
+                . We handle everything from single rooms and feature walls to
+                full interior and exterior projects for homes and commercial
+                spaces.
               </p>
               <p>
                 We take pride in doing the job properly — proper preparation,
@@ -132,6 +146,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <RelatedAreas />
 
       <CtaBand />
     </>

@@ -62,6 +62,16 @@ export default function ServicesSection() {
             );
           })}
         </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/services/"
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors hover:text-accent"
+          >
+            Browse all services
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </section>
   );

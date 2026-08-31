@@ -179,15 +179,27 @@ export default async function LocationPage({
           <div className="mt-5 max-w-2xl space-y-4 text-lg leading-relaxed text-muted-foreground">
             <p>
               Looking for reliable painters in {loc.name}? {site.name} delivers
-              spotless interior and exterior painting &amp; decorating across{" "}
-              {loc.name} and the wider Co. {loc.county} area — with premium paints,
-              proper preparation and a tidy finish every time.
+              spotless{" "}
+              <Link
+                href="/services/"
+                className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+              >
+                interior and exterior painting &amp; decorating
+              </Link>{" "}
+              across {loc.name} and the wider Co. {loc.county} area — with premium
+              paints, proper preparation and a tidy finish every time.
             </p>
             <p>
-              With over {site.stats.years} years&apos; experience, we cover
-              everything from a single room to full home and commercial repaints,
-              plus kitchen cabinet respraying. We also serve nearby areas like{" "}
-              {nearbyNames.join(", ")}. Get a free, fixed-price quote today.
+              With{" "}
+              <Link
+                href="/about/"
+                className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+              >
+                over {site.stats.years} years&apos; experience
+              </Link>
+              , we cover everything from a single room to full home and commercial
+              repaints, plus kitchen cabinet respraying. We also serve nearby areas
+              like {nearbyNames.join(", ")}. Get a free, fixed-price quote today.
             </p>
           </div>
 
@@ -255,6 +267,14 @@ export default async function LocationPage({
               );
             })}
           </div>
+
+          <Link
+            href="/services/"
+            className="mt-10 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors hover:text-accent"
+          >
+            See all our painting services
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
@@ -341,12 +361,19 @@ export default async function LocationPage({
               </Link>
             ))}
           </div>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
             <Link
               href="/painters/"
               className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-accent"
             >
               View all areas we cover
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/contact/"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-accent"
+            >
+              Prefer to talk? Contact us
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

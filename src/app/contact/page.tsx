@@ -63,6 +63,13 @@ export default function ContactPage() {
                     </span>
                   </p>
                 </div>
+                <Link
+                  href="/painters/"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-accent hover:underline"
+                >
+                  See all areas we cover
+                  <MapPin className="h-4 w-4" />
+                </Link>
               </CardContent>
             </Card>
           </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import { site } from "@/config/site";
 import { slugify } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,16 @@ export default function AreasSection() {
               </Badge>
             </Link>
           ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <Link
+            href="/painters/"
+            className="inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors hover:text-accent"
+          >
+            View all areas we cover
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

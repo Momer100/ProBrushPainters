@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
 import CtaBand from "@/components/cta-band";
 import ProcessSection from "@/components/process-section";
+import RelatedAreas from "@/components/related-areas";
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -42,7 +43,18 @@ export default function ServicesPage() {
             title="Painting & Decorating Services"
             sub="Every job, big or small, gets the same care: proper preparation, premium paints and a spotless tidy-up."
           />
-          
+
+          <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-muted-foreground">
+            A trusted local team —{" "}
+            <Link
+              href="/about/"
+              className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+            >
+              learn more about us
+            </Link>
+            .
+          </p>
+
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {site.services.map((service) => {
               const Icon = icons[service.icon] ?? PaintRoller;
@@ -78,6 +90,8 @@ export default function ServicesPage() {
 
       {/* Add process section for context on the services page */}
       <ProcessSection />
+
+      <RelatedAreas heading="Painting services near you" />
 
       <CtaBand />
     </>
