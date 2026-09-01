@@ -12,6 +12,7 @@ export const site = {
   domain: "probrushpainters.ie",
   url: "https://www.probrushpainters.ie", // canonical production domain (apex 308-redirects to www)
   location: "Ireland", // used in headlines & SEO
+  analyticsId: "G-8JW0GWB725", // Google Analytics 4 measurement ID
 
   // ── Contact details (PLACEHOLDERS — replace with real ones) ──
   phoneDisplay: "086 125 3342", // shown on screen
