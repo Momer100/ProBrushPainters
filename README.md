@@ -76,3 +76,17 @@ automatically. Without it, submissions are logged but no email is sent.
 The sender address (`quoteFrom`) and recipient (`quoteEmail`) live in
 `src/config/site.ts`. The `quoteFrom` domain must be **Verified in Resend**. The page
 also offers WhatsApp / call / email options for visitors who prefer them.
+
+The quote form's line items and starting prices are also in `src/config/site.ts`
+(`quoteItems`) — edit titles/prices there and the builder updates automatically.
+
+## Bing IndexNow (fast re-indexing)
+
+The IndexNow key file is served at `/a9b0b1bc1c054a138a95674ca7bf3a3e.txt`. After
+deploying new or changed pages, notify Bing/Yandex to re-crawl:
+
+```bash
+npm run indexnow    # reads the live sitemap and submits every URL
+```
+
+(The key file must be live on the domain first — i.e. deploy before running.)

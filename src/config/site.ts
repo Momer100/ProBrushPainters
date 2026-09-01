@@ -70,6 +70,70 @@ export const site = {
     },
   ] as const,
 
+  // ── Quote builder line items ──
+  // The "Get a Quote" form lets customers add these to build a running estimate.
+  // Prices are STARTING ESTIMATES only — edit freely. Set custom:true for items with
+  // no fixed price (shown as "Custom quote", excluded from the running total).
+  quoteItems: [
+    {
+      id: "room",
+      title: "Room / Bedroom",
+      unitPrice: 300,
+      unit: "per room",
+      description: "Walls, ceiling & trim for one standard room",
+    },
+    {
+      id: "living_room",
+      title: "Living / Dining Room",
+      unitPrice: 350,
+      unit: "per room",
+      description: "Larger living or dining room",
+    },
+    {
+      id: "hall_stairs",
+      title: "Hallway, Stairs & Landing",
+      unitPrice: 400,
+      unit: "flat",
+      description: "Stairwell, landing & hallway",
+    },
+    {
+      id: "full_house",
+      title: "Full House Interior",
+      unitPrice: 1200,
+      unit: "from",
+      description: "Complete interior repaint",
+    },
+    {
+      id: "kitchen_cabinets",
+      title: "Kitchen Cabinets",
+      unitPrice: 750,
+      unit: "from",
+      description: "Professional respraying / painting of units",
+    },
+    {
+      id: "door",
+      title: "Door & Frame",
+      unitPrice: 80,
+      unit: "per door",
+      description: "Each door painted, including the frame",
+    },
+    {
+      id: "woodwork",
+      title: "Skirting & Woodwork",
+      unitPrice: 120,
+      unit: "per room",
+      description: "Skirting, architraves & trim per room",
+    },
+    {
+      id: "exterior",
+      title: "Exterior Painting",
+      unitPrice: 0,
+      unit: "custom",
+      description: "Masonry, fascia, soffit & window frames",
+      custom: true,
+    },
+  ] as const,
+
   // ── How it works ──
   steps: [
     {

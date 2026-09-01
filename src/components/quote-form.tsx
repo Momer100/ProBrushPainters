@@ -5,7 +5,9 @@ import {
   CheckCircle2,
   Image as ImageIcon,
   Loader2,
+  Minus,
   Phone,
+  Plus,
   Upload,
   X,
   Sparkles,
@@ -14,13 +16,54 @@ import { site } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 
-type JobOption = {
+type QuoteItem = {
   id: string;
   title: string;
-  estimate: string;
-  startingPrice: number;
+  unitPrice: number;
+  unit: string;
   description: string;
+  custom?: boolean;
 };
+
+// Catalog lives in site.ts so prices are easy to edit.
+const QUOTE_ITEMS: readonly QuoteItem[] = site.quoteItems;
+
+function formatEuro(n: number) {
+  return `€${n.toLocaleString("en-IE")}`;
+}
+
+// Price label shown on each item card.
+function priceLabel(item: QuoteItem) {
+  if (item.custom) return "Custom quote";
+  if (item.unit === "from") return `from ${formatEuro(item.unitPrice)}`;
+  if (item.unit === "flat") return formatEuro(item.unitPrice);
+  return `${formatEuro(item.unitPrice)} ${item.unit}`;
+}
+
+type EstimateLine = QuoteItem & { qty: number; subtotal: number };
+
+// Turn the quantity map into selected lines + a running total.
+function computeEstimate(quantities: Record<string, number>) {
+  const lines: EstimateLine[] = QUOTE_ITEMS.filter(
+    (it) => (quantities[it.id] ?? 0) > 0
+  ).map((it) => {
+    const qty = quantities[it.id] ?? 0;
+    return { ...it, qty, subtotal: it.custom ? 0 : it.unitPrice * qty };
+  });
+
+  const total = lines.reduce((sum, l) => sum + l.subtotal, 0);
+  const totalQty = lines.reduce((sum, l) => sum + l.qty, 0);
+  const hasCustom = lines.some((l) => l.custom);
+
+  let label: string;
+  if (totalQty === 0) label = "—";
+  else if (total > 0 && hasCustom)
+    label = `From ${formatEuro(total)} + custom quote`;
+  else if (total > 0) label = `From ${formatEuro(total)}`;
+  else label = "Custom quote";
+
+  return { lines, total, totalQty, hasCustom, label };
+}
 
 // Shrink a photo in the browser before upload. Vercel serverless functions reject
 // request bodies over ~4.5 MB, and phone photos are often 3–5 MB each, so we resize
@@ -78,53 +121,8 @@ function compressImage(file: File): Promise<File> {
   });
 }
 
-const JOB_OPTIONS: JobOption[] = [
-  {
-    id: "1_bedroom",
-    title: "1 Room / Bedroom",
-    estimate: "~€300",
-    startingPrice: 300,
-    description: "Walls, ceiling & trim for 1 standard room",
-  },
-  {
-    id: "2_3_rooms",
-    title: "2–3 Rooms",
-    estimate: "~€550 – €850",
-    startingPrice: 550,
-    description: "Multiple bedrooms, living room, or hallway",
-  },
-  {
-    id: "full_house",
-    title: "Full House Interior",
-    estimate: "~€1,200+",
-    startingPrice: 1200,
-    description: "Complete interior repainting",
-  },
-  {
-    id: "kitchen_cabinets",
-    title: "Kitchen Cabinets",
-    estimate: "~€750+",
-    startingPrice: 750,
-    description: "Professional respraying / painting of cabinets",
-  },
-  {
-    id: "doors_trim",
-    title: "Doors & Woodwork / Trim",
-    estimate: "~€250+",
-    startingPrice: 250,
-    description: "Skirting, architraves, doors & frames",
-  },
-  {
-    id: "exterior",
-    title: "Exterior Painting",
-    estimate: "Custom quote",
-    startingPrice: 0,
-    description: "Masonry, window frames, fascia & soffit",
-  },
-];
-
 export default function QuoteForm() {
-  const [selectedJob, setSelectedJob] = useState<string>("1_bedroom");
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -136,7 +134,11 @@ export default function QuoteForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const currentJob = JOB_OPTIONS.find((j) => j.id === selectedJob) || JOB_OPTIONS[0];
+  const estimate = computeEstimate(quantities);
+
+  function setQty(id: string, next: number) {
+    setQuantities((prev) => ({ ...prev, [id]: Math.max(0, next) }));
+  }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
@@ -153,6 +155,10 @@ export default function QuoteForm() {
     e.preventDefault();
     setError("");
 
+    if (estimate.totalQty < 1) {
+      setError("Please add at least one item to build your quote.");
+      return;
+    }
     if (!name.trim()) {
       setError("Please enter your name.");
       return;
@@ -165,10 +171,22 @@ export default function QuoteForm() {
     setLoading(true);
 
     try {
+      // Pack the itemised selection into the fields the email route already renders.
+      const serviceStr = estimate.lines
+        .map((l) => `${l.qty}× ${l.title}`)
+        .join(", ");
+      const scopeStr = estimate.lines
+        .map((l) =>
+          l.custom
+            ? `${l.title} (custom quote)`
+            : `${l.qty}× ${l.title} (${formatEuro(l.subtotal)})`
+        )
+        .join(" · ");
+
       const formData = new FormData();
-      formData.append("service", currentJob.title);
-      formData.append("scope", currentJob.description);
-      formData.append("estimatedPrice", currentJob.estimate);
+      formData.append("service", serviceStr);
+      formData.append("scope", scopeStr);
+      formData.append("estimatedPrice", estimate.label);
       formData.append("name", name.trim());
       formData.append("phone", phone.trim());
       formData.append("email", email.trim());
@@ -226,8 +244,22 @@ export default function QuoteForm() {
 
         <div className="mt-8 rounded-xl bg-white p-6 shadow-soft border border-border inline-block max-w-sm w-full text-left">
           <p className="text-xs font-bold uppercase tracking-wider text-accent">Summary</p>
-          <p className="mt-1 text-sm font-bold text-primary">{currentJob.title}</p>
-          <p className="text-xs text-muted-foreground">Estimated starting range: <span className="font-semibold text-amber-600">{currentJob.estimate}</span></p>
+          <ul className="mt-2 space-y-1">
+            {estimate.lines.map((l) => (
+              <li key={l.id} className="flex justify-between text-sm text-primary">
+                <span className="font-semibold">
+                  {l.qty}× {l.title}
+                </span>
+                <span className="text-muted-foreground">
+                  {l.custom ? "Custom" : formatEuro(l.subtotal)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 border-t border-border pt-2 text-sm font-bold text-primary">
+            Estimated starting price:{" "}
+            <span className="text-amber-600">{estimate.label}</span>
+          </p>
           {photos.length > 0 && (
             <p className="mt-2 text-xs font-medium text-emerald-700 flex items-center gap-1.5">
               <ImageIcon className="h-3.5 w-3.5" /> {photos.length} photo(s) attached
@@ -246,10 +278,12 @@ export default function QuoteForm() {
           <button
             onClick={() => {
               setSubmitted(false);
+              setQuantities({});
               setPhotos([]);
               setName("");
               setPhone("");
               setEmail("");
+              setLocation("");
               setDetails("");
             }}
             className="text-xs font-semibold text-muted-foreground hover:text-primary underline py-2"
@@ -271,63 +305,113 @@ export default function QuoteForm() {
           Get a Quick Quote for Your Job
         </h2>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Select what needs to be painted for an instant estimated starting price, then attach photos for an exact quote.
+          Add everything that needs painting to build your estimate, then attach photos for an exact quote.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-        {/* Step 1: Select Job Type */}
+        {/* Step 1: Build the quote */}
         <div>
           <label className="block text-sm font-extrabold text-primary mb-3">
-            1. Select What Needs Painting
+            1. Add What Needs Painting
           </label>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {JOB_OPTIONS.map((job) => {
-              const active = job.id === selectedJob;
+          <div className="grid gap-3 sm:grid-cols-2">
+            {QUOTE_ITEMS.map((item) => {
+              const qty = quantities[item.id] ?? 0;
+              const active = qty > 0;
               return (
-                <button
-                  type="button"
-                  key={job.id}
-                  onClick={() => setSelectedJob(job.id)}
-                  className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
+                <div
+                  key={item.id}
+                  className={`flex items-center justify-between gap-3 rounded-xl border p-4 transition-all ${
                     active
-                      ? "border-accent bg-accent/5 ring-2 ring-accent/20 shadow-soft"
-                      : "border-border hover:border-primary/40 bg-white"
+                      ? "border-accent bg-accent/5 ring-1 ring-accent/20"
+                      : "border-border bg-white"
                   }`}
                 >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-extrabold text-primary">{job.title}</p>
-                      <span className="text-xs font-black text-accent bg-accent/10 px-2 py-0.5 rounded-md">
-                        {job.estimate}
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-2">
+                      <p className="text-sm font-extrabold text-primary">
+                        {item.title}
+                      </p>
+                      <span className="text-xs font-black text-accent">
+                        {priceLabel(item)}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                      {job.description}
+                    <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">
+                      {item.description}
                     </p>
                   </div>
-                </button>
+
+                  {qty === 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setQty(item.id, 1)}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-accent px-3 py-1.5 text-xs font-bold text-accent transition-colors hover:bg-accent hover:text-white"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Add
+                    </button>
+                  ) : (
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label={`Remove one ${item.title}`}
+                        onClick={() => setQty(item.id, qty - 1)}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-primary hover:border-accent hover:text-accent"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <span className="w-5 text-center text-sm font-extrabold text-primary">
+                        {qty}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={`Add one ${item.title}`}
+                        onClick={() => setQty(item.id, qty + 1)}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-primary hover:border-accent hover:text-accent"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Dynamic Estimated Price Banner */}
-        <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800">
-              Instant Estimated Starting Price
+        {/* Running estimate summary */}
+        <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4">
+          <p className="text-xs font-extrabold uppercase tracking-wider text-amber-800">
+            Your Estimated Starting Price
+          </p>
+
+          {estimate.lines.length > 0 ? (
+            <>
+              <ul className="mt-2 space-y-1">
+                {estimate.lines.map((l) => (
+                  <li
+                    key={l.id}
+                    className="flex items-center justify-between text-sm text-amber-900"
+                  >
+                    <span className="font-semibold">
+                      {l.qty}× {l.title}
+                    </span>
+                    <span>{l.custom ? "Custom quote" : formatEuro(l.subtotal)}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 border-t border-amber-200 pt-2 text-2xl font-extrabold text-amber-900">
+                {estimate.label}
+              </p>
+              <p className="mt-1 text-xs text-amber-800/80">
+                *Starting estimate. Upload photos below for an exact fixed price.
+              </p>
+            </>
+          ) : (
+            <p className="mt-1.5 text-sm text-amber-800/90">
+              Add items above and your estimated starting price will appear here.
             </p>
-            <p className="text-xl font-extrabold text-amber-900 mt-0.5">
-              {currentJob.estimate}
-            </p>
-            <p className="text-xs text-amber-800/80">
-              *Starting estimate for {currentJob.title.toLowerCase()}. Upload photos below for an exact fixed price.
-            </p>
-          </div>
-          <span className="text-xs font-bold text-accent bg-white px-3 py-1.5 rounded-lg border border-amber-200 shadow-xs shrink-0">
-            Cheap &amp; Transparent Rates
-          </span>
+          )}
         </div>
 
         {/* Step 2: Upload Photos */}
