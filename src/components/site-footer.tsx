@@ -128,11 +128,18 @@ export default function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container flex flex-col items-center justify-between gap-2 py-5 text-xs text-primary-foreground/60 sm:flex-row">
+        <div className="container flex flex-col items-center justify-between gap-3 py-5 text-xs text-primary-foreground/60 sm:flex-row">
           <p>
             © {new Date().getFullYear()} {site.name} · {site.domain}
           </p>
-          <p>Painting &amp; Decorating · Ireland</p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy/" className="hover:text-accent">
+              Privacy Policy
+            </Link>
+            <Link href="/terms/" className="hover:text-accent">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -55,7 +55,14 @@ export default function CookieConsent() {
             <p className="text-sm leading-relaxed text-muted-foreground">
               We use cookies to analyse site traffic and improve your experience.
               You can accept or decline analytics cookies — essential site functions
-              work either way.
+              work either way. See our{" "}
+              <a
+                href="/privacy/"
+                className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+              >
+                Privacy Policy
+              </a>
+              .
             </p>
             <div className="flex shrink-0 gap-2.5">
               <button

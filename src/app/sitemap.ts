@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/about/`, lastModified, priority: 0.7 },
     { url: `${site.url}/contact/`, lastModified, priority: 0.6 },
     { url: `${site.url}/painters/`, lastModified, priority: 0.7 },
+    { url: `${site.url}/privacy/`, lastModified, priority: 0.3 },
+    { url: `${site.url}/terms/`, lastModified, priority: 0.3 },
   ];
 
   // One entry per town location page.
