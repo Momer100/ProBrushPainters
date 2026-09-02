@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/config/site";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import MobileCallBar from "@/components/mobile-call-bar";
+import CookieConsent from "@/components/cookie-consent";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -80,19 +80,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* Google Analytics (GA4) */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${site.analyticsId}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${site.analyticsId}');
-          `}
-        </Script>
+        {/* Cookie consent banner — loads Google Analytics only after opt-in */}
+        <CookieConsent />
       </body>
     </html>
   );
