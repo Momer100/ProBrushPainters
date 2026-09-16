@@ -49,14 +49,26 @@ function getLocation(slug: string): Location | undefined {
   return site.locations.find((l) => slugify(l.name) === slug);
 }
 
-// Same-county towns first (varies per page for natural internal linking),
-// then fill from other counties. Capped so the block stays tidy.
-function nearbyLocations(current: Location): Location[] {
+// Related service areas for internal linking: same county first, then same PROVINCE,
+// then anywhere else — so the list stays regionally relevant. We deliberately describe
+// these as "other areas we cover" (never "nearby"), because our service area spans
+// Ireland and a filler town may not be geographically close.
+function relatedLocations(current: Location): Location[] {
+  const currentProvince = provinceByCounty[current.county];
   const sameCounty = site.locations.filter(
     (l) => l.county === current.county && l.name !== current.name
   );
-  const others = site.locations.filter((l) => l.county !== current.county);
-  return [...sameCounty, ...others].slice(0, 6);
+  const sameProvince = site.locations.filter(
+    (l) =>
+      l.county !== current.county &&
+      provinceByCounty[l.county] === currentProvince
+  );
+  const elsewhere = site.locations.filter(
+    (l) =>
+      l.county !== current.county &&
+      provinceByCounty[l.county] !== currentProvince
+  );
+  return [...sameCounty, ...sameProvince, ...elsewhere].slice(0, 6);
 }
 
 export function generateStaticParams() {
@@ -98,9 +110,9 @@ export default async function LocationPage({
   const loc = getLocation(slug);
   if (!loc) notFound();
 
-  const nearby = nearbyLocations(loc);
-  const nearbyNames = nearby.slice(0, 3).map((l) => l.name);
-  const nearbyList = nearby.slice(0, 5).map((l) => l.name).join(", ");
+  const related = relatedLocations(loc);
+  const relatedNames = related.slice(0, 3).map((l) => l.name);
+  const relatedList = related.slice(0, 5).map((l) => l.name).join(", ");
 
   // Province is fixed, verified geography (Republic of Ireland). Only used for factual
   // location context; falls back to nothing if a county isn't mapped.
@@ -164,8 +176,8 @@ export default async function LocationPage({
       a: `In ${loc.name} we offer ${site.services.map((s) => s.title).join(", ")}.`,
     },
     {
-      q: `Which areas near ${loc.name} do you cover?`,
-      a: `As well as ${loc.name}, we cover nearby areas including ${nearbyList}. If you don't see your area listed, just ask.`,
+      q: `What other areas do you cover?`,
+      a: `As well as ${loc.name}, we cover other areas including ${relatedList}. If you don't see your area listed, just ask.`,
     },
     {
       q: `Are you insured?`,
@@ -273,8 +285,8 @@ export default async function LocationPage({
                 over {site.stats.years} years&apos; experience
               </Link>
               , we cover everything from a single room to full home and commercial
-              repaints, plus kitchen cabinet respraying. We also serve nearby areas
-              like {nearbyNames.join(", ")}. Get a free, no-obligation quote today.
+              repaints, plus kitchen cabinet respraying. We also cover{" "}
+              {relatedNames.join(", ")} and more. Get a free, no-obligation quote today.
             </p>
           </div>
 
@@ -422,17 +434,17 @@ export default async function LocationPage({
         </div>
       </section>
 
-      {/* Nearby areas — internal links */}
+      {/* Other areas we cover — internal links */}
       <section className="bg-white py-16 lg:py-20">
         <div className="container">
           <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
-            Painters near {loc.name}
+            Other areas we cover
           </h2>
           <p className="mt-3 text-base text-muted-foreground">
-            We also cover these nearby areas:
+            {site.name} also covers these areas:
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            {nearby.map((l) => (
+            {related.map((l) => (
               <Link
                 key={l.name}
                 href={`/painters/${slugify(l.name)}/`}
