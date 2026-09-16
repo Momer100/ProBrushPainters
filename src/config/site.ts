@@ -156,30 +156,6 @@ export const site = {
     },
   ] as const,
 
-  // ── Reviews (PLACEHOLDERS — replace with real Google reviews) ──
-  reviews: [
-    {
-      name: "Sarah M.",
-      area: "Ranelagh",
-      text: "Absolutely delighted with the work. The lads were punctual, tidy and the finish on our hallway and stairs is perfect. Already recommended them to two neighbours.",
-    },
-    {
-      name: "James O'Connor",
-      area: "Clontarf",
-      text: "Got three quotes for the exterior of the house. ProBrush weren't the cheapest but clearly the most professional — worth every cent. The place looks brand new.",
-    },
-    {
-      name: "Aoife K.",
-      area: "Dundrum",
-      text: "They resprayed our kitchen cabinets and honestly it looks like a new kitchen. Clean, careful work and finished exactly when they said they would.",
-    },
-    {
-      name: "David L.",
-      area: "Blackrock",
-      text: "Fast quote, fair price, brilliant result. They protected everything and left the house spotless each evening. Will definitely use again.",
-    },
-  ] as const,
-
   // ── Location pages (local SEO) ──
   // Each entry generates its own /painters/{slug}/ page. Keep to REAL towns
   // (one page per distinct place — no postcode ranges or duplicate city names).

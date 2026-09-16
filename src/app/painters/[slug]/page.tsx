@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   Sparkles,
   SprayCan,
-  Star,
   Wallpaper,
   type LucideIcon,
 } from "lucide-react";
@@ -308,38 +307,20 @@ export default async function LocationPage({
         </div>
       </section>
 
-      {/* Reviews */}
+      {/* Review CTA */}
       <section className="py-16 lg:py-20">
         <div className="container">
-          <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
-            What our customers say
-          </h2>
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {site.reviews.map((review) => (
-              <Card key={review.name}>
-                <CardContent>
-                  <div className="flex gap-0.5 text-accent">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
-                    ))}
-                  </div>
-                  <p className="mt-4 text-base leading-relaxed text-foreground/80">
-                    &ldquo;{review.text}&rdquo;
-                  </p>
-                  <p className="mt-4 text-sm font-bold text-primary">
-                    {review.name}
-                    <span className="font-medium text-muted-foreground">
-                      {" "}
-                      · {review.area}
-                    </span>
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="mt-10">
-            <GoogleReviewButton variant="accent" />
+          <div className="rounded-2xl border border-border bg-secondary/40 p-8 text-center sm:p-10">
+            <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+              Recently had us paint in {loc.name}?
+            </h2>
+            <p className="mx-auto mt-2 max-w-xl text-base text-muted-foreground">
+              We&apos;d really appreciate a quick review on Google — it helps other
+              homeowners in {loc.name} find us.
+            </p>
+            <div className="mt-6 flex justify-center">
+              <GoogleReviewButton variant="accent" />
+            </div>
           </div>
         </div>
       </section>
