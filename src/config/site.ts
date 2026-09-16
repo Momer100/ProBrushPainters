@@ -306,6 +306,33 @@ export const site = {
   ] as const,
 };
 
+// Province for each county we serve. Standard, fixed Irish geography (used only for
+// factual location context on the town pages). Republic-of-Ireland counties only.
+export const provinceByCounty: Record<string, string> = {
+  Dublin: "Leinster",
+  Wicklow: "Leinster",
+  Kildare: "Leinster",
+  Louth: "Leinster",
+  Meath: "Leinster",
+  Westmeath: "Leinster",
+  Offaly: "Leinster",
+  Laois: "Leinster",
+  Kilkenny: "Leinster",
+  Carlow: "Leinster",
+  Wexford: "Leinster",
+  Cork: "Munster",
+  Limerick: "Munster",
+  Waterford: "Munster",
+  Kerry: "Munster",
+  Clare: "Munster",
+  Galway: "Connacht",
+  Sligo: "Connacht",
+  Mayo: "Connacht",
+  Monaghan: "Ulster",
+  Cavan: "Ulster",
+  Donegal: "Ulster",
+};
+
 // Helper: pre-filled WhatsApp link
 export function whatsappLink(message: string) {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;

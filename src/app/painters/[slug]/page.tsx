@@ -17,7 +17,7 @@ import {
   Wallpaper,
   type LucideIcon,
 } from "lucide-react";
-import { site } from "@/config/site";
+import { site, provinceByCounty } from "@/config/site";
 import { slugify } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
@@ -100,6 +100,88 @@ export default async function LocationPage({
 
   const nearby = nearbyLocations(loc);
   const nearbyNames = nearby.slice(0, 3).map((l) => l.name);
+  const nearbyList = nearby.slice(0, 5).map((l) => l.name).join(", ");
+
+  // Province is fixed, verified geography (Republic of Ireland). Only used for factual
+  // location context; falls back to nothing if a county isn't mapped.
+  const province = provinceByCounty[loc.county];
+
+  // Reusable inline link so each intro variant still points to /services/.
+  const servicesLink = (
+    <Link
+      href="/services/"
+      className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+    >
+      interior and exterior painting &amp; decorating
+    </Link>
+  );
+
+  // Four opening paragraphs, chosen deterministically per town so pages don't share one
+  // boilerplate. Every clause is either the town's county/province (verified) or a claim
+  // already on the live site (services, premium paints, proper prep, tidy finish).
+  const introVariants = [
+    <>
+      Looking for reliable painters in {loc.name}? {site.name} delivers spotless{" "}
+      {servicesLink} across {loc.name}, Co. {loc.county}
+      {province ? `, in the ${province} region` : ""} — with premium paints, proper
+      preparation and a tidy finish every time.
+    </>,
+    <>
+      {site.name} is a trusted painting &amp; decorating team serving {loc.name}, Co.{" "}
+      {loc.county}
+      {province ? ` and the wider ${province} region` : ""}. From single rooms to full
+      homes and commercial spaces, we provide {servicesLink} with a spotless finish.
+    </>,
+    <>
+      Need a dependable painter in {loc.name}, Co. {loc.county}? {site.name} covers{" "}
+      {loc.name}
+      {province ? ` and the surrounding ${province} area` : ""}, offering {servicesLink}{" "}
+      with premium paints and proper preparation on every job.
+    </>,
+    <>
+      For {servicesLink} in {loc.name}, Co. {loc.county}, {site.name} is here to help —
+      working with homeowners and businesses throughout {loc.name}
+      {province ? ` and across ${province}` : ""}.
+    </>,
+  ];
+  const introIndex =
+    [...slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % introVariants.length;
+
+  // FAQ — built ONLY from claims already on the live site + verified geography, phrased
+  // to avoid any specific price or timeframe. Rendered on the page AND mirrored in the
+  // FAQPage JSON-LD so the structured data matches the visible content.
+  const faqs = [
+    {
+      q: `Do you offer free quotes in ${loc.name}?`,
+      a: `Yes — we offer free, no-obligation quotes for painting and decorating in ${loc.name}. Call us on ${site.phoneDisplay} or send your job details through our online quote form and we'll come back to you.`,
+    },
+    {
+      q: `How much does painting cost in ${loc.name}?`,
+      a: `Every job in ${loc.name} is priced individually, based on the rooms and surfaces involved. Use our online quote tool for an instant starting estimate, and we'll confirm a clear fixed price with no hidden extras.`,
+    },
+    {
+      q: `What painting services do you offer in ${loc.name}?`,
+      a: `In ${loc.name} we offer ${site.services.map((s) => s.title).join(", ")}.`,
+    },
+    {
+      q: `Which areas near ${loc.name} do you cover?`,
+      a: `As well as ${loc.name}, we cover nearby areas including ${nearbyList}. If you don't see your area listed, just ask.`,
+    },
+    {
+      q: `Are you insured?`,
+      a: `Yes — ${site.name} is fully insured, with ${site.stats.years}+ years of experience and a workmanship guarantee on every job.`,
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   // Local-business structured data scoped to this town.
   const jsonLd = {
@@ -149,6 +231,10 @@ export default async function LocationPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       {/* Hero / intro */}
       <section className="relative overflow-hidden bg-gradient-to-b from-secondary/60 to-background">
@@ -177,18 +263,7 @@ export default async function LocationPage({
           </h1>
 
           <div className="mt-5 max-w-2xl space-y-4 text-lg leading-relaxed text-muted-foreground">
-            <p>
-              Looking for reliable painters in {loc.name}? {site.name} delivers
-              spotless{" "}
-              <Link
-                href="/services/"
-                className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
-              >
-                interior and exterior painting &amp; decorating
-              </Link>{" "}
-              across {loc.name} and the wider Co. {loc.county} area — with premium
-              paints, proper preparation and a tidy finish every time.
-            </p>
+            <p>{introVariants[introIndex]}</p>
             <p>
               With{" "}
               <Link
@@ -199,7 +274,7 @@ export default async function LocationPage({
               </Link>
               , we cover everything from a single room to full home and commercial
               repaints, plus kitchen cabinet respraying. We also serve nearby areas
-              like {nearbyNames.join(", ")}. Get a free, fixed-price quote today.
+              like {nearbyNames.join(", ")}. Get a free, no-obligation quote today.
             </p>
           </div>
 
@@ -303,6 +378,28 @@ export default async function LocationPage({
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 lg:py-20">
+        <div className="container">
+          <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
+            Painting in {loc.name} — your questions answered
+          </h2>
+          <div className="mt-10 max-w-3xl space-y-5">
+            {faqs.map((f) => (
+              <div
+                key={f.q}
+                className="rounded-2xl border border-border bg-white p-6 shadow-xs"
+              >
+                <h3 className="text-lg font-extrabold text-primary">{f.q}</h3>
+                <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
