@@ -19,6 +19,7 @@ export const site = {
   phoneHref: "+353861253342", // used by tel: links
   whatsappNumber: "353861253342", // country code, no + or spaces
   email: "info@probrushpainters.ie",
+  googleReviewUrl: "https://g.page/r/CYXZ3gu_Ev1NEBM/review", // "Review us on Google" link
   quoteEmail: "info@probrushpainters.ie", // Live business inbox — receives quote form submissions
   // Resend "from" address — sends from the verified probrushpainters.ie domain.
   // No mailbox is needed at quotes@ to send; customer replies go to their own email

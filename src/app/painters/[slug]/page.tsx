@@ -23,6 +23,7 @@ import { slugify } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import CtaBand from "@/components/cta-band";
+import GoogleReviewButton from "@/components/google-review-button";
 
 // Only pages listed in generateStaticParams exist — any other slug 404s.
 export const dynamicParams = false;
@@ -335,6 +336,10 @@ export default async function LocationPage({
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-10">
+            <GoogleReviewButton variant="accent" />
           </div>
         </div>
       </section>

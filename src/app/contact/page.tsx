@@ -6,6 +6,7 @@ import SectionHeading from "@/components/section-heading";
 import CtaBand from "@/components/cta-band";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import GoogleReviewButton from "@/components/google-review-button";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -79,13 +80,16 @@ export default function ContactPage() {
             <p className="mt-2 text-sm text-muted-foreground mb-4">
               Call us today for a free, no-obligation quote.
             </p>
-            <a
-              href={`tel:${site.phoneHref}`}
-              className={buttonVariants({ variant: "accent" })}
-            >
-              <Phone className="h-4 w-4" />
-              {site.phoneDisplay}
-            </a>
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a
+                href={`tel:${site.phoneHref}`}
+                className={buttonVariants({ variant: "accent" })}
+              >
+                <Phone className="h-4 w-4" />
+                {site.phoneDisplay}
+              </a>
+              <GoogleReviewButton variant="outline" size="md" />
+            </div>
           </div>
         </div>
       </section>

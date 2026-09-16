@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import { site } from "@/config/site";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
+import GoogleReviewButton from "@/components/google-review-button";
 
 export default function ReviewsSection() {
   return (
@@ -38,6 +39,13 @@ export default function ReviewsSection() {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <GoogleReviewButton variant="white" />
+          <p className="mt-3 text-sm text-white/60">
+            Had us paint for you? We&apos;d love a review.
+          </p>
         </div>
       </div>
     </section>
