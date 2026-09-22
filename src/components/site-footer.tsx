@@ -23,9 +23,9 @@ export default function SiteFooter() {
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             {site.services.map((s) => (
-              <li key={s.title}>
+              <li key={s.id}>
                 <Link
-                  href="/#services"
+                  href={`/services/${s.id}/`}
                   className="text-primary-foreground/85 transition-colors hover:text-accent"
                 >
                   {s.title}

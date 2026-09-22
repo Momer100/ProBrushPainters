@@ -33,42 +33,168 @@ export const site = {
   },
 
   // ── Services ──
+  // `long` + `includes` are keyword-rich but factual descriptions of each service.
+  // `id` is the URL slug for the per-service page (/services/{id}/).
   services: [
     {
+      id: "interior-painting",
       icon: "PaintRoller",
       title: "Interior Painting",
       blurb:
         "Walls, ceilings, woodwork and feature walls — crisp lines, premium paints, zero mess left behind.",
+      long:
+        "Professional interior painting and decorating across Ireland. We prepare and paint walls, ceilings, hallways, stairwells and feature walls to a flawless finish, using premium trade emulsion, matt and satin paints in homes and commercial spaces.",
+      includes: [
+        "Walls & ceilings",
+        "Feature & accent walls",
+        "Hallways, stairs & landings",
+        "Filling, sanding & preparation",
+        "Matt, satin & silk finishes",
+      ],
     },
     {
+      id: "exterior-painting",
       icon: "Home",
       title: "Exterior Painting",
       blurb:
         "Weather-resistant finishes that protect your home and transform its kerb appeal for years.",
+      long:
+        "Exterior painting and weatherproofing for homes and businesses across Ireland. We paint masonry, render and pebbledash, fascia, soffit and gutters, window frames and front doors with weather-resistant masonry paints that protect and transform your property.",
+      includes: [
+        "Masonry, render & pebbledash",
+        "Fascia, soffit & gutters",
+        "Window frames & sills",
+        "Front doors & gates",
+        "Power-washing & preparation",
+      ],
     },
     {
+      id: "kitchen-cabinet-respraying",
       icon: "SprayCan",
       title: "Kitchen Cabinet Respraying",
       blurb:
         "A factory-smooth, brand-new kitchen look for a fraction of the cost of replacement.",
+      long:
+        "Kitchen cabinet respraying and painting for a factory-smooth, brand-new kitchen look for a fraction of the cost of replacement. We spray cabinet doors, drawers, end panels and units in your choice of colour and finish.",
+      includes: [
+        "Cabinet doors & drawers",
+        "End panels & plinths",
+        "Degreasing & keying",
+        "Primer + sprayed topcoat",
+        "Colour matching",
+      ],
     },
     {
+      id: "commercial-painting",
       icon: "Building2",
       title: "Commercial Painting",
       blurb:
         "Offices, retail and hospitality — flexible out-of-hours work so your business keeps running.",
+      long:
+        "Commercial painting and decorating for offices, retail units, hospitality and leisure across Ireland. We offer flexible out-of-hours and weekend work with low-odour paints so your business keeps running.",
+      includes: [
+        "Offices & retail units",
+        "Hospitality & leisure",
+        "Out-of-hours & weekend work",
+        "Large-area spray & roller",
+        "Low-odour, low-disruption",
+      ],
     },
     {
+      id: "wallpaper-hanging",
       icon: "Wallpaper",
       title: "Wallpaper Hanging",
       blurb:
         "Feature walls, murals and delicate papers hung with precision and perfectly matched patterns.",
+      long:
+        "Wallpaper hanging for feature walls, murals and delicate papers, hung with precision and perfectly matched patterns. We prepare walls, apply lining paper where needed and hang standard, textured and specialist wallpapers.",
+      includes: [
+        "Feature & accent walls",
+        "Pattern-matched papers",
+        "Lining paper",
+        "Wall preparation",
+        "Murals & specialist papers",
+      ],
     },
     {
+      id: "prep-and-plastering",
       icon: "Hammer",
       title: "Prep & Plastering",
       blurb:
         "Filling, sanding, skimming and repairs — the flawless base every great paint job needs.",
+      long:
+        "Surface preparation and plastering — the flawless base every great paint job needs. We fill, sand, skim, patch-plaster and repair cracks and damaged surfaces before painting for a smooth, lasting finish.",
+      includes: [
+        "Filling & sanding",
+        "Skimming & patch plastering",
+        "Crack & surface repair",
+        "Caulking & sealing",
+        "Priming",
+      ],
+    },
+    {
+      id: "woodwork-trim-painting",
+      icon: "DoorOpen",
+      title: "Woodwork & Trim Painting",
+      blurb:
+        "Skirting, architraves, doors, frames and stairs finished in crisp gloss, satinwood or eggshell.",
+      long:
+        "Woodwork and trim painting for skirting boards, architraves, internal doors, frames, window boards and stairs. We prepare, prime and finish woodwork in gloss, satinwood or eggshell for a hard-wearing, crisp result.",
+      includes: [
+        "Skirting & architraves",
+        "Internal doors & frames",
+        "Window boards & sills",
+        "Stairs & banisters",
+        "Gloss, satinwood & eggshell",
+      ],
+    },
+    {
+      id: "wood-staining-varnishing",
+      icon: "Paintbrush",
+      title: "Wood Staining & Varnishing",
+      blurb:
+        "Protective stains, varnishes and oils for doors, decking, gates and timber surfaces.",
+      long:
+        "Wood staining and varnishing to protect and restore timber. We sand, prepare and apply protective stains, varnishes and oils to doors, gates, decking, fencing and other wood surfaces.",
+      includes: [
+        "Doors & gates",
+        "Decking & fencing",
+        "Timber surfaces",
+        "Sanding & preparation",
+        "Protective stain, varnish & oil",
+      ],
+    },
+    {
+      id: "spray-painting",
+      icon: "PaintBucket",
+      title: "Spray Painting",
+      blurb:
+        "Fast, smooth, even spray finishes for cabinets, doors, radiators and large areas.",
+      long:
+        "Spray painting and spray finishing for a fast, smooth and even coat. We spray kitchen cabinets, wardrobes, doors, radiators, furniture and large ceilings and walls, with careful masking to protect surrounding surfaces.",
+      includes: [
+        "Cabinets & wardrobes",
+        "Doors & radiators",
+        "Furniture",
+        "Large ceilings & walls",
+        "Careful masking & prep",
+      ],
+    },
+    {
+      id: "damp-stain-block",
+      icon: "Droplets",
+      title: "Damp & Stain-Block Treatment",
+      blurb:
+        "Sealing water stains, damp patches and mould so they don't bleed back through the paint.",
+      long:
+        "Stain-blocking and anti-damp treatment before painting. We seal water stains, damp patches, nicotine and smoke marks, and treat mould with stain-block primers and moisture-resistant paints so they don't bleed back through the finish.",
+      includes: [
+        "Water & damp stains",
+        "Nicotine & smoke stains",
+        "Mould treatment",
+        "Stain-block priming",
+        "Moisture-resistant paints",
+      ],
     },
   ] as const,
 

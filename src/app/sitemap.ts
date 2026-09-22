@@ -25,5 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...corePages, ...locationPages];
+  // One entry per service page.
+  const servicePages: MetadataRoute.Sitemap = site.services.map((s) => ({
+    url: `${site.url}/services/${s.id}/`,
+    lastModified,
+    priority: 0.7,
+  }));
+
+  return [...corePages, ...locationPages, ...servicePages];
 }

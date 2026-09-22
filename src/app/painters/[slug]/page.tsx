@@ -6,9 +6,13 @@ import {
   BadgeCheck,
   Building2,
   Clock,
+  DoorOpen,
+  Droplets,
   Hammer,
   Home,
   MapPin,
+  PaintBucket,
+  Paintbrush,
   PaintRoller,
   Phone,
   ShieldCheck,
@@ -36,6 +40,10 @@ const serviceIcons: Record<string, LucideIcon> = {
   Building2,
   Wallpaper,
   Hammer,
+  DoorOpen,
+  Paintbrush,
+  PaintBucket,
+  Droplets,
 };
 
 const valueIcons: Record<string, LucideIcon> = {

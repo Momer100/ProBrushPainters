@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import {
   ArrowRight,
   Building2,
+  DoorOpen,
+  Droplets,
   Hammer,
   Home,
+  PaintBucket,
+  Paintbrush,
   PaintRoller,
   SprayCan,
   Wallpaper,
@@ -30,6 +34,10 @@ const icons: Record<string, LucideIcon> = {
   Building2,
   Wallpaper,
   Hammer,
+  DoorOpen,
+  Paintbrush,
+  PaintBucket,
+  Droplets,
 };
 
 export default function ServicesPage() {
@@ -60,7 +68,7 @@ export default function ServicesPage() {
               const Icon = icons[service.icon] ?? PaintRoller;
               return (
                 <Card
-                  key={service.title}
+                  key={service.id}
                   className="group flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
                 >
                   <CardContent className="flex flex-1 flex-col">
@@ -68,16 +76,21 @@ export default function ServicesPage() {
                       <Icon className="h-7 w-7 text-accent" />
                     </div>
                     <h3 className="mt-6 text-xl font-extrabold text-primary">
-                      {service.title}
+                      <Link
+                        href={`/services/${service.id}/`}
+                        className="transition-colors group-hover:text-accent"
+                      >
+                        {service.title}
+                      </Link>
                     </h3>
                     <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
-                      {service.blurb}
+                      {service.long}
                     </p>
                     <Link
-                      href="/get-a-quote/"
+                      href={`/services/${service.id}/`}
                       className="mt-6 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors group-hover:text-accent"
                     >
-                      Get a free quote
+                      Learn more
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </CardContent>
