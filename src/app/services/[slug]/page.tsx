@@ -25,6 +25,7 @@ import { site } from "@/config/site";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import CtaBand from "@/components/cta-band";
+import ProcessSection from "@/components/process-section";
 import RelatedAreas from "@/components/related-areas";
 
 export const dynamicParams = false;
@@ -94,6 +95,38 @@ export default async function ServicePage({
 
   const Icon = icons[service.icon] ?? PaintRoller;
   const others = site.services.filter((s) => s.id !== service.id);
+  const serviceLower = service.title.toLowerCase();
+
+  // FAQ — built only from confirmed facts + the service's own `includes` list. No price
+  // figure, no timeframe. Rendered visibly AND mirrored in the FAQPage JSON-LD.
+  const faqs = [
+    {
+      q: `Do you offer ${serviceLower} across Ireland?`,
+      a: `Yes — ${site.name} provides ${serviceLower} for homes and businesses across Ireland. Call us on ${site.phoneDisplay} or use our online quote form for a free, no-obligation quote.`,
+    },
+    {
+      q: `How much does ${serviceLower} cost?`,
+      a: `Every job is priced individually based on the work involved. Use our online quote tool for a starting estimate, and we'll confirm a clear fixed price with no hidden extras.`,
+    },
+    {
+      q: `What does your ${serviceLower} include?`,
+      a: `It typically includes ${service.includes.join(", ").toLowerCase()}.`,
+    },
+    {
+      q: `Are you insured?`,
+      a: `Yes — ${site.name} is fully insured, with ${site.stats.years}+ years of experience and a workmanship guarantee on every job.`,
+    },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -141,6 +174,10 @@ export default async function ServicePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       {/* Hero / intro */}
       <section className="relative overflow-hidden bg-gradient-to-b from-secondary/60 to-background">
@@ -159,17 +196,23 @@ export default async function ServicePage({
             / <span className="text-primary">{service.title}</span>
           </nav>
 
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent/15">
-            <Icon className="h-7 w-7 text-accent" />
-          </div>
+          <p className="inline-flex items-center gap-1.5 text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+            <Icon className="h-4 w-4" /> Painting &amp; Decorating
+          </p>
 
-          <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-primary text-balance sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-primary text-balance sm:text-5xl">
             Professional {service.title} in {site.location}
           </h1>
 
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            {service.long}
-          </p>
+          <div className="mt-5 max-w-2xl space-y-4 text-lg leading-relaxed text-muted-foreground">
+            <p>{service.long}</p>
+            <p>
+              Whether it&apos;s a single room or a full property, we prepare surfaces
+              properly and use premium trade paints and materials for a durable,
+              professional finish — for homeowners, landlords and businesses across{" "}
+              {site.location}.
+            </p>
+          </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -186,6 +229,21 @@ export default async function ServicePage({
               Get a Quote Online
             </Link>
           </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-foreground/70">
+            <span className="inline-flex items-center gap-1.5">
+              <BadgeCheck className="h-4 w-4 text-accent" /> {site.stats.years}+
+              years experience
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <BadgeCheck className="h-4 w-4 text-accent" /> Fully insured &amp;
+              guaranteed
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <BadgeCheck className="h-4 w-4 text-accent" /> Free, no-obligation
+              quotes
+            </span>
+          </div>
         </div>
       </section>
 
@@ -195,7 +253,7 @@ export default async function ServicePage({
           <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
             What&apos;s included
           </h2>
-          <ul className="mt-8 grid max-w-3xl gap-3 sm:grid-cols-2">
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {service.includes.map((item) => (
               <li
                 key={item}
@@ -238,6 +296,31 @@ export default async function ServicePage({
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <ProcessSection />
+
+      {/* FAQ */}
+      <section className="bg-white py-16 lg:py-20">
+        <div className="container">
+          <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
+            {service.title} — your questions answered
+          </h2>
+          <div className="mt-10 max-w-3xl space-y-5">
+            {faqs.map((f) => (
+              <div
+                key={f.q}
+                className="rounded-2xl border border-border bg-white p-6 shadow-xs"
+              >
+                <h3 className="text-lg font-extrabold text-primary">{f.q}</h3>
+                <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+                  {f.a}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
