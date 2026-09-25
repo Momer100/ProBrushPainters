@@ -12,7 +12,7 @@ export default function AreasSection() {
         <SectionHeading
           eyebrow="Areas we cover"
           title={`Proudly serving ${site.location} & beyond`}
-          sub="Based locally and happy to travel. Tap your area for local painting services — don't see it listed? Just ask."
+          sub="Looking for painters near you? We cover towns and cities right across Ireland. Tap your area for local painting services — don't see it listed? Just ask."
         />
 
         <div className="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-2.5">

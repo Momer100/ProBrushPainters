@@ -253,13 +253,13 @@ export default async function ServicePage({
           <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
             What&apos;s included
           </h2>
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 flex flex-wrap gap-3">
             {service.includes.map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-3 rounded-xl border border-border bg-white p-4 shadow-xs"
+                className="inline-flex items-center gap-2.5 rounded-full border border-border bg-white py-2.5 pl-2.5 pr-5 shadow-xs"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15">
                   <Check className="h-4 w-4 text-accent" />
                 </span>
                 <span className="text-base font-semibold text-primary">

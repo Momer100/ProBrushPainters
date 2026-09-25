@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: `${site.name} | Painters & Decorators in ${site.location}`,
     template: `%s | ${site.name}`,
   },
-  description: `Professional painting & decorating across ${site.location}. Interior, exterior, kitchen cabinet respraying & commercial work. Get a free quote today.`,
+  description: `Professional painters in ${site.location}. ${site.name} offers interior & exterior painting services across ${site.location} — kitchen cabinet respraying, commercial & more. Free quotes.`,
   // Default canonical for the home page; other pages override via their own metadata.
   alternates: { canonical: "/" },
   openGraph: {

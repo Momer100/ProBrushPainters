@@ -1,5 +1,6 @@
 import SectionHeading from "@/components/section-heading";
 import Image from "next/image";
+import { site } from "@/config/site";
 
 /* ── Before & After #1: simple side-by-side ── */
 const transformation1 = {
@@ -57,7 +58,7 @@ export default function BeforeAfterSection() {
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                 <Image
                   src={transformation1.before.src}
-                  alt={transformation1.before.label}
+                  alt={`Room before painting — ${site.name} interior painting project`}
                   fill
                   className="object-cover"
                 />
@@ -70,7 +71,7 @@ export default function BeforeAfterSection() {
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                 <Image
                   src={transformation1.after.src}
-                  alt={transformation1.after.label}
+                  alt={`Freshly painted room after — ${site.name} interior painting project`}
                   fill
                   className="object-cover"
                 />
@@ -98,7 +99,7 @@ export default function BeforeAfterSection() {
                 <div className="relative h-full min-h-[400px] w-full overflow-hidden rounded-2xl shadow-soft">
                   <Image
                     src={transformation2.before.src}
-                    alt={transformation2.before.label}
+                    alt={`Room during a full repaint — ${site.name} painting & decorating`}
                     fill
                     className="object-cover"
                   />
@@ -117,7 +118,7 @@ export default function BeforeAfterSection() {
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                     <Image
                       src={img.src}
-                      alt={img.label}
+                      alt={`Freshly painted room after — ${site.name} painting & decorating`}
                       fill
                       className="object-cover"
                     />
@@ -134,7 +135,7 @@ export default function BeforeAfterSection() {
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                     <Image
                       src={img.src}
-                      alt={img.label}
+                      alt={`${img.label} — ${site.name} painting project`}
                       fill
                       className="object-cover"
                     />
@@ -163,7 +164,7 @@ export default function BeforeAfterSection() {
                 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                   <Image
                     src={p.src}
-                    alt={p.label}
+                    alt={`Painting & decorating project by ${site.name}`}
                     fill
                     className="object-cover transition-transform duration-500 hover:scale-105"
                   />

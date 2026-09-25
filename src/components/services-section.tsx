@@ -37,7 +37,7 @@ export default function ServicesSection() {
         <SectionHeading
           eyebrow="What we do"
           title="Painting & decorating services"
-          sub="Every job, big or small, gets the same care: proper preparation, premium paints and a spotless tidy-up."
+          sub="Professional painting services across Ireland. Every job, big or small, gets the same care: proper preparation, premium paints and a spotless tidy-up."
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
