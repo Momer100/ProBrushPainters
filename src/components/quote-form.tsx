@@ -25,14 +25,10 @@ type QuoteItem = {
   custom?: boolean;
 };
 
-// Catalog lives in site.ts so prices are easy to edit.
-const QUOTE_ITEMS: readonly QuoteItem[] = site.quoteItems;
-
 function formatEuro(n: number) {
   return `€${n.toLocaleString("en-IE")}`;
 }
 
-// Price label shown on each item card.
 function priceLabel(item: QuoteItem) {
   if (item.custom) return "Custom quote";
   if (item.unit === "from") return `from ${formatEuro(item.unitPrice)}`;
@@ -43,8 +39,8 @@ function priceLabel(item: QuoteItem) {
 type EstimateLine = QuoteItem & { qty: number; subtotal: number };
 
 // Turn the quantity map into selected lines + a running total.
-function computeEstimate(quantities: Record<string, number>) {
-  const lines: EstimateLine[] = QUOTE_ITEMS.filter(
+function computeEstimate(quantities: Record<string, number>, catalog: readonly QuoteItem[]) {
+  const lines: EstimateLine[] = catalog.filter(
     (it) => (quantities[it.id] ?? 0) > 0
   ).map((it) => {
     const qty = quantities[it.id] ?? 0;
@@ -121,7 +117,11 @@ function compressImage(file: File): Promise<File> {
   });
 }
 
-export default function QuoteForm() {
+export default function QuoteForm({
+  items = site.quoteItems,
+}: {
+  items?: readonly QuoteItem[] | QuoteItem[];
+}) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -134,7 +134,8 @@ export default function QuoteForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const estimate = computeEstimate(quantities);
+  const quoteItemsList: readonly QuoteItem[] = items;
+  const estimate = computeEstimate(quantities, quoteItemsList);
 
   function setQty(id: string, next: number) {
     setQuantities((prev) => ({ ...prev, [id]: Math.max(0, next) }));
@@ -316,7 +317,7 @@ export default function QuoteForm() {
             1. Add What Needs Painting
           </label>
           <div className="grid gap-3 sm:grid-cols-2">
-            {QUOTE_ITEMS.map((item) => {
+            {quoteItemsList.map((item) => {
               const qty = quantities[item.id] ?? 0;
               const active = qty > 0;
               return (

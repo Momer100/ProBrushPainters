@@ -1,17 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, Phone } from "lucide-react";
-import { site } from "@/config/site";
 import { buttonVariants } from "@/components/ui/button";
+import { getSiteSettings } from "@/../sanity/lib/data";
 
-export default function Hero() {
+export default async function Hero() {
+  const site = await getSiteSettings();
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-secondary/60 to-background">
       <div className="container grid items-center gap-12 py-14 lg:grid-cols-2 lg:py-24">
         {/* Copy */}
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-            Painting &amp; Decorating · Ireland
+            Painting &amp; Decorating · {site.location}
           </p>
 
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-primary text-balance sm:text-5xl lg:text-[3.4rem]">
@@ -21,7 +23,7 @@ export default function Hero() {
 
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
             From a single room to a full home or commercial space, {site.name}{" "}
-            delivers spotless, on-time painting and decorating across Ireland.
+            delivers spotless, on-time painting and decorating across {site.location}.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -30,13 +32,13 @@ export default function Hero() {
               className={buttonVariants({ variant: "accent", size: "lg" })}
             >
               <Phone className="h-4 w-4" />
-              Call for a Free Quote
+              Call for a Free Quote: {site.phoneDisplay}
             </a>
             <Link
               href="/get-a-quote/"
               className={buttonVariants({ variant: "outline", size: "lg" })}
             >
-              Learn More
+              Get a Quote
             </Link>
           </div>
 

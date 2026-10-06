@@ -13,9 +13,9 @@ import {
   Wallpaper,
   type LucideIcon,
 } from "lucide-react";
-import { site } from "@/config/site";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
+import { getServices } from "@/../sanity/lib/data";
 
 const icons: Record<string, LucideIcon> = {
   PaintRoller,
@@ -30,7 +30,9 @@ const icons: Record<string, LucideIcon> = {
   Droplets,
 };
 
-export default function ServicesSection() {
+export default async function ServicesSection() {
+  const services = await getServices();
+
   return (
     <section id="services" className="scroll-mt-20 py-20">
       <div className="container">
@@ -41,7 +43,7 @@ export default function ServicesSection() {
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {site.services.map((service) => {
+          {services.map((service) => {
             const Icon = icons[service.icon] ?? PaintRoller;
             return (
               <Card

@@ -1,12 +1,16 @@
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Deployed as a normal Next.js app on Vercel so the /api/quote route can run
-  // server-side (it sends the quote email via Resend). Static export is NOT used
-  // because `output: "export"` strips out API routes.
+  outputFileTracingRoot: __dirname,
   trailingSlash: true,
   images: {
-    // Required for static export (no Next.js image optimization server).
     unoptimized: true,
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
 };
 

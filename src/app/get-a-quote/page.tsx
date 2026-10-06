@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
 import { Clock, Mail, MessageCircle, Phone, ShieldCheck } from "lucide-react";
-import { site, whatsappLink } from "@/config/site";
+import { whatsappLink } from "@/config/site";
 import QuoteForm from "@/components/quote-form";
 import { Card, CardContent } from "@/components/ui/card";
+import { getQuoteItems, getSiteSettings } from "@/../sanity/lib/data";
 
-export const metadata: Metadata = {
-  title: "Get a Free Quote",
-  description: `Request a free, no-obligation painting quote from ${site.name}. Send photos of your job and get a fixed-price quote within 24 hours.`,
-  alternates: { canonical: "/get-a-quote/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSiteSettings();
+  return {
+    title: "Get a Free Quote",
+    description: `Request a free, no-obligation painting quote from ${site.name}. Send photos of your job and get a fixed-price quote within 24 hours.`,
+    alternates: { canonical: "/get-a-quote/" },
+  };
+}
 
-export default function GetAQuotePage() {
+export default async function GetAQuotePage() {
+  const [items, site] = await Promise.all([
+    getQuoteItems(),
+    getSiteSettings(),
+  ]);
+
   return (
     <section className="py-12 lg:py-20">
       <div className="container">
@@ -109,7 +118,7 @@ export default function GetAQuotePage() {
 
           {/* Interactive quote form */}
           <div className="overflow-hidden">
-            <QuoteForm />
+            <QuoteForm items={items} />
           </div>
         </div>
       </div>

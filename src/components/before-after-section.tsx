@@ -1,43 +1,15 @@
 import SectionHeading from "@/components/section-heading";
 import Image from "next/image";
-import { site } from "@/config/site";
+import { getPortfolioData, getSiteSettings } from "@/../sanity/lib/data";
 
-/* ── Before & After #1: simple side-by-side ── */
-const transformation1 = {
-  before: { src: "/images/s-l1600 (9).jpg", label: "Before" },
-  after: { src: "/images/s-l1600 (10).jpg", label: "After" },
-};
+export default async function BeforeAfterSection() {
+  const [data, site] = await Promise.all([
+    getPortfolioData(),
+    getSiteSettings(),
+  ]);
 
-/* ── Before & After #2: full room transformation ── */
-const transformation2 = {
-  before: { src: "/images/s-l1600 (11).jpg", label: "Before" },
-  mainAfter: [
-    { src: "/images/s-l1600 (21).jpg", label: "After" },
-    { src: "/images/s-l1600 (23).jpg", label: "After" },
-  ],
-  relatedAfter: [
-    { src: "/images/s-l1600 (19).jpg", label: "Same room — another angle" },
-    { src: "/images/s-l1600 (22).jpg", label: "Same room — detail" },
-  ],
-};
+  const { transformation1, transformation2, gallery } = data;
 
-/* ── General portfolio gallery ── */
-const gallery = [
-  { src: "/images/s-l1600 (1).jpg", label: "Project" },
-  { src: "/images/s-l1600 (2).jpg", label: "Project" },
-  { src: "/images/s-l1600 (3).jpg", label: "Project" },
-  { src: "/images/s-l1600 (4).jpg", label: "Project" },
-  { src: "/images/s-l1600 (5).jpg", label: "Project" },
-  { src: "/images/s-l1600 (14).jpg", label: "Project" },
-  { src: "/images/s-l1600 (15).jpg", label: "Project" },
-  { src: "/images/s-l1600 (16).jpg", label: "Project" },
-  { src: "/images/s-l1600 (17).jpg", label: "Project" },
-  { src: "/images/s-l1600 (18).jpg", label: "Project" },
-  { src: "/images/s-l1600 (20).jpg", label: "Project" },
-  { src: "/images/s-l1600 (24).jpg", label: "Project" },
-];
-
-export default function BeforeAfterSection() {
   return (
     <section id="work" className="scroll-mt-20 bg-white py-20">
       <div className="container">
@@ -63,7 +35,7 @@ export default function BeforeAfterSection() {
                   className="object-cover"
                 />
                 <span className="absolute left-4 top-4 rounded-full bg-red-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                  Before
+                  {transformation1.before.label || "Before"}
                 </span>
               </div>
             </figure>
@@ -76,7 +48,7 @@ export default function BeforeAfterSection() {
                   className="object-cover"
                 />
                 <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                  After
+                  {transformation1.after.label || "After"}
                 </span>
               </div>
             </figure>
@@ -104,7 +76,7 @@ export default function BeforeAfterSection() {
                     className="object-cover"
                   />
                   <span className="absolute left-4 top-4 rounded-full bg-amber-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                    During
+                    {transformation2.before.label || "During"}
                   </span>
                 </div>
               </figure>
@@ -113,8 +85,8 @@ export default function BeforeAfterSection() {
             {/* After shots (2x2 grid) */}
             <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Main after shots */}
-              {transformation2.mainAfter.map((img) => (
-                <figure key={img.src}>
+              {transformation2.mainAfter.map((img, idx) => (
+                <figure key={img.src + idx}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                     <Image
                       src={img.src}
@@ -123,15 +95,15 @@ export default function BeforeAfterSection() {
                       className="object-cover"
                     />
                     <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                      After
+                      {img.label || "After"}
                     </span>
                   </div>
                 </figure>
               ))}
 
               {/* Related shots — same room */}
-              {transformation2.relatedAfter.map((img) => (
-                <figure key={img.src}>
+              {transformation2.relatedAfter.map((img, idx) => (
+                <figure key={img.src + idx}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                     <Image
                       src={img.src}
@@ -140,7 +112,7 @@ export default function BeforeAfterSection() {
                       className="object-cover"
                     />
                     <span className="absolute left-4 top-4 rounded-full bg-emerald-500/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm">
-                      After
+                      {img.label || "After"}
                     </span>
                   </div>
                 </figure>
@@ -159,8 +131,8 @@ export default function BeforeAfterSection() {
           </p>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {gallery.map((p) => (
-              <figure key={p.src}>
+            {gallery.map((p, idx) => (
+              <figure key={p.src + idx}>
                 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
                   <Image
                     src={p.src}

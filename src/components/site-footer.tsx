@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
-import { site } from "@/config/site";
+import { site as fallbackSite } from "@/config/site";
 import { slugify } from "@/lib/utils";
 import { Logo } from "@/components/logo";
+import { getSiteSettings } from "@/../sanity/lib/data";
 
-export default function SiteFooter() {
+export default async function SiteFooter() {
+  const site = await getSiteSettings();
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
@@ -12,7 +15,7 @@ export default function SiteFooter() {
         <div>
           <Logo dark />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/70">
-            Professional painting &amp; decorating across Ireland. Quality finishes you&apos;ll be proud of.
+            Professional painting &amp; decorating across {site.location}. Quality finishes you&apos;ll be proud of.
           </p>
         </div>
 
@@ -22,7 +25,7 @@ export default function SiteFooter() {
             Services
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm">
-            {site.services.map((s) => (
+            {fallbackSite.services.map((s) => (
               <li key={s.id}>
                 <Link
                   href={`/services/${s.id}/`}
@@ -107,7 +110,7 @@ export default function SiteFooter() {
             Areas we serve
           </h3>
           <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-            {site.locations.map((loc) => (
+            {fallbackSite.locations.map((loc) => (
               <li key={loc.name}>
                 <Link
                   href={`/painters/${slugify(loc.name)}/`}
