@@ -42,4 +42,19 @@ export const quoteItem = defineType({
       initialValue: false,
     }),
   ],
+  preview: {
+    select: {
+      title: "title",
+      unitPrice: "unitPrice",
+      unit: "unit",
+      custom: "custom",
+    },
+    prepare({ title, unitPrice, unit, custom }) {
+      const priceStr = custom ? "Custom Quote" : `€${unitPrice ?? 0} (${unit || "per item"})`;
+      return {
+        title: title || "New Pricing Item",
+        subtitle: priceStr,
+      };
+    },
+  },
 });

@@ -38,4 +38,18 @@ export const testimonial = defineType({
       description: "e.g. Interior Painting, Kitchen Respraying, Exterior",
     }),
   ],
+  preview: {
+    select: {
+      title: "author",
+      location: "location",
+      serviceCategory: "serviceCategory",
+    },
+    prepare({ title, location, serviceCategory }) {
+      const sub = [location, serviceCategory].filter(Boolean).join(" · ");
+      return {
+        title: title || "Anonymous Customer",
+        subtitle: sub || "Customer Review",
+      };
+    },
+  },
 });

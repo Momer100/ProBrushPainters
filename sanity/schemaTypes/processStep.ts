@@ -32,4 +32,16 @@ export const processStep = defineType({
       by: [{ field: "stepNumber", direction: "asc" }],
     },
   ],
+  preview: {
+    select: {
+      title: "title",
+      stepNumber: "stepNumber",
+    },
+    prepare({ title, stepNumber }) {
+      return {
+        title: title || "New Step",
+        subtitle: stepNumber ? `Step ${stepNumber}` : "Process Step",
+      };
+    },
+  },
 });

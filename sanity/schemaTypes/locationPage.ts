@@ -39,4 +39,16 @@ export const locationPage = defineType({
       description: "Custom introductory text for SEO on this location page",
     }),
   ],
+  preview: {
+    select: {
+      title: "townName",
+      county: "county",
+    },
+    prepare({ title, county }) {
+      return {
+        title: title || "New Location",
+        subtitle: county ? `Co. ${county}` : "Ireland",
+      };
+    },
+  },
 });
