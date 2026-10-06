@@ -13,33 +13,31 @@ export default async function Hero() {
         {/* Copy */}
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-            Painting &amp; Decorating · {site.location}
+            {site.tagline} · {site.location}
           </p>
 
           <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-primary text-balance sm:text-5xl lg:text-[3.4rem]">
-            {site.location}&apos;s trusted painters —{" "}
-            <span className="text-accent">a flawless finish, guaranteed.</span>
+            {site.heroTitle}
           </h1>
 
           <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
-            From a single room to a full home or commercial space, {site.name}{" "}
-            delivers spotless, on-time painting and decorating across {site.location}.
+            {site.heroSubtext}
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={`tel:${site.phoneHref}`}
-              className={buttonVariants({ variant: "accent", size: "lg" })}
-            >
-              <Phone className="h-4 w-4" />
-              Call for a Free Quote: {site.phoneDisplay}
-            </a>
             <Link
               href="/get-a-quote/"
+              className={buttonVariants({ variant: "accent", size: "lg" })}
+            >
+              {site.heroCtaText}
+            </Link>
+            <a
+              href={`tel:${site.phoneHref}`}
               className={buttonVariants({ variant: "outline", size: "lg" })}
             >
-              Get a Quote
-            </Link>
+              <Phone className="h-4 w-4" />
+              {site.heroSecondaryCtaText}: {site.phoneDisplay}
+            </a>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-foreground/70">

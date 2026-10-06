@@ -9,7 +9,7 @@ import { schemaTypes } from "./sanity/schemaTypes";
 import { structure } from "./sanity/structure";
 
 // Singletons that should not be duplicated/deleted from the Studio UI.
-const SINGLETON_TYPES = new Set(["siteSettings", "portfolio"]);
+const SINGLETON_TYPES = new Set(["siteSettings", "portfolio", "aboutPage"]);
 
 export default defineConfig({
   name: "probrush-painters",

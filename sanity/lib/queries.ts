@@ -32,3 +32,34 @@ export const quoteItemsQuery = groq`*[_type == "quoteItem"]{
   description,
   custom
 }`;
+
+export const testimonialsQuery = groq`*[_type == "testimonial"]{
+  author,
+  location,
+  rating,
+  reviewText,
+  serviceCategory
+}`;
+
+export const processStepsQuery = groq`*[_type == "processStep"] | order(stepNumber asc){
+  stepNumber,
+  title,
+  text
+}`;
+
+export const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
+  eyebrow,
+  title,
+  paragraph1,
+  paragraph2,
+  paragraph3,
+  teamImage { ..., "url": asset->url, alt },
+  values[] { icon, title, text }
+}`;
+
+export const locationPageQuery = groq`*[_type == "locationPage" && slug.current == $slug][0]{
+  townName,
+  county,
+  customHeadline,
+  customDescription
+}`;

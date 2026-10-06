@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/section-heading";
 import CtaBand from "@/components/cta-band";
 import RelatedAreas from "@/components/related-areas";
+import { getAboutPage, getSiteSettings } from "@/../sanity/lib/data";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -27,7 +28,16 @@ const valueIcons: Record<string, LucideIcon> = {
   ShieldCheck,
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [siteSettings, aboutData] = await Promise.all([
+    getSiteSettings(),
+    getAboutPage(),
+  ]);
+
+  const eyebrow = aboutData?.eyebrow || "About us";
+  const title = aboutData?.title || "A painting team you can trust";
+  const values = aboutData?.values || site.values;
+
   return (
     <>
       {/* Intro */}
@@ -37,47 +47,61 @@ export default function AboutPage() {
             <SectionHeading
               as="h1"
               center={false}
-              eyebrow="About us"
-              title="A painting team you can trust"
+              eyebrow={eyebrow}
+              title={title}
             />
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>
-                {site.name} is a professional{" "}
-                <Link
-                  href="/services/"
-                  className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
-                >
-                  painting and decorating
-                </Link>{" "}
-                team with over {site.stats.years} years of experience working{" "}
-                <Link
-                  href="/painters/"
-                  className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
-                >
-                  across Ireland
-                </Link>
-                . We handle everything from single rooms and feature walls to
-                full interior and exterior projects for homes and commercial
-                spaces.
-              </p>
-              <p>
-                We take pride in doing the job properly — proper preparation,
-                quality materials, and a clean finish every time. We show up
-                when we say we will, keep the place tidy, and don&apos;t leave
-                until you&apos;re happy with the result.
-              </p>
-              <p>
-                Whether you need a fresh coat in one room or a complete
-                repaint, give us a call and we&apos;ll sort you out with a
-                free, no-obligation quote.
-              </p>
+              {aboutData?.paragraph1 ? (
+                <p>{aboutData.paragraph1}</p>
+              ) : (
+                <p>
+                  {siteSettings.name} is a professional{" "}
+                  <Link
+                    href="/services/"
+                    className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+                  >
+                    painting and decorating
+                  </Link>{" "}
+                  team with over {siteSettings.stats.years} years of experience working{" "}
+                  <Link
+                    href="/painters/"
+                    className="font-semibold text-primary underline decoration-accent/40 underline-offset-2 hover:text-accent"
+                  >
+                    across Ireland
+                  </Link>
+                  . We handle everything from single rooms and feature walls to
+                  full interior and exterior projects for homes and commercial
+                  spaces.
+                </p>
+              )}
+
+              {aboutData?.paragraph2 ? (
+                <p>{aboutData.paragraph2}</p>
+              ) : (
+                <p>
+                  We take pride in doing the job properly — proper preparation,
+                  quality materials, and a clean finish every time. We show up
+                  when we say we will, keep the place tidy, and don&apos;t leave
+                  until you&apos;re happy with the result.
+                </p>
+              )}
+
+              {aboutData?.paragraph3 ? (
+                <p>{aboutData.paragraph3}</p>
+              ) : (
+                <p>
+                  Whether you need a fresh coat in one room or a complete
+                  repaint, give us a call and we&apos;ll sort you out with a
+                  free, no-obligation quote.
+                </p>
+              )}
             </div>
           </div>
 
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lift">
             <Image
-              src="/images/team.jpg"
-              alt={`The ${site.name} team at work`}
+              src={aboutData?.teamImage || "/images/team.jpg"}
+              alt={`The ${siteSettings.name} team at work`}
               fill
               className="object-cover"
             />
@@ -93,7 +117,7 @@ export default function AboutPage() {
             title="What you can count on"
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {site.values.map((value) => {
+            {values.map((value: any) => {
               const Icon = valueIcons[value.icon] ?? BadgeCheck;
               return (
                 <Card key={value.title}>

@@ -5,23 +5,35 @@ import {
   servicesQuery,
   portfolioQuery,
   quoteItemsQuery,
+  testimonialsQuery,
+  processStepsQuery,
+  aboutPageQuery,
+  locationPageQuery,
 } from "./queries";
 import { sanityConfigured } from "../env";
 import { site } from "@/config/site";
 
 // Query Sanity with 60s revalidate; returns null (→ fallback) if CMS
 // is not configured or query fails, ensuring site is always robust.
-async function sanityFetch<T>(query: string): Promise<T | null> {
+async function sanityFetch<T>(query: string, params: Record<string, any> = {}): Promise<T | null> {
   if (!sanityConfigured) return null;
   try {
-    return await client.fetch<T>(query, {}, { next: { revalidate: 60 } });
+    return await client.fetch<T>(query, params, { next: { revalidate: 60 } });
   } catch (err) {
     console.error("[sanity] fetch failed:", (err as Error).message);
     return null;
   }
 }
 
-export type SiteSettings = typeof site;
+export type SiteSettings = typeof site & {
+  heroTitle?: string;
+  heroSubtext?: string;
+  heroCtaText?: string;
+  heroSecondaryCtaText?: string;
+  ctaHeading?: string;
+  ctaSubtext?: string;
+  ctaButtonText?: string;
+};
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const s = (await sanityFetch<Record<string, any>>(siteSettingsQuery)) || {};
@@ -39,6 +51,15 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     stats: {
       years: s.yearsInBusiness ?? site.stats.years,
     },
+    heroTitle: s.heroTitle || "Professional Painting & Decorating Across Ireland",
+    heroSubtext:
+      s.heroSubtext ||
+      "Interior & exterior painting, kitchen respraying, and wallpapering. Free fixed-price quotes, quality trade paints, and zero mess left behind.",
+    heroCtaText: s.heroCtaText || "Get a Free Fast Quote",
+    heroSecondaryCtaText: s.heroSecondaryCtaText || "Call Us Now",
+    ctaHeading: s.ctaHeading || "Ready to transform your home?",
+    ctaSubtext: s.ctaSubtext || "Get a fast, free, fixed-price quote with no obligation today.",
+    ctaButtonText: s.ctaButtonText || "Get Your Free Quote",
   };
 }
 
@@ -66,6 +87,52 @@ export async function getQuoteItems() {
     description: d.description || "",
     custom: d.custom ?? false,
   }));
+}
+
+export async function getTestimonials() {
+  const docs = await sanityFetch<any[]>(testimonialsQuery);
+  if (!docs || docs.length === 0) return null;
+  return docs.map((d) => ({
+    author: d.author || "Satisfied Customer",
+    location: d.location || "Ireland",
+    rating: d.rating ?? 5,
+    text: d.reviewText || "",
+    serviceCategory: d.serviceCategory || "Painting",
+  }));
+}
+
+export async function getProcessSteps() {
+  const docs = await sanityFetch<any[]>(processStepsQuery);
+  if (!docs || docs.length === 0) return site.steps;
+  return docs.map((d) => ({
+    title: d.title,
+    text: d.text,
+  }));
+}
+
+export async function getAboutPage() {
+  const doc = await sanityFetch<any>(aboutPageQuery);
+  if (!doc) return null;
+  return {
+    eyebrow: doc.eyebrow || "About us",
+    title: doc.title || "A painting team you can trust",
+    paragraph1: doc.paragraph1,
+    paragraph2: doc.paragraph2,
+    paragraph3: doc.paragraph3,
+    teamImage: doc.teamImage ? urlFor(doc.teamImage).width(1200).url() : null,
+    values: doc.values || null,
+  };
+}
+
+export async function getLocationPage(slug: string) {
+  const doc = await sanityFetch<any>(locationPageQuery, { slug });
+  if (!doc) return null;
+  return {
+    townName: doc.townName,
+    county: doc.county,
+    customHeadline: doc.customHeadline,
+    customDescription: doc.customDescription,
+  };
 }
 
 export type Transformation1 = {

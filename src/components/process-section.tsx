@@ -1,7 +1,9 @@
-import { site } from "@/config/site";
 import SectionHeading from "@/components/section-heading";
+import { getProcessSteps } from "@/../sanity/lib/data";
 
-export default function ProcessSection() {
+export default async function ProcessSection() {
+  const steps = await getProcessSteps();
+
   return (
     <section className="py-20">
       <div className="container">
@@ -12,7 +14,7 @@ export default function ProcessSection() {
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {site.steps.map((step, i) => (
+          {steps.map((step, i) => (
             <div
               key={step.title}
               className="relative rounded-lg border border-border bg-card p-6 shadow-soft"

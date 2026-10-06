@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export const siteSettings = defineType({
   name: "siteSettings",
-  title: "Site Settings",
+  title: "Site Settings & Homepage Hero",
   type: "document",
   fields: [
     defineField({
@@ -64,6 +64,55 @@ export const siteSettings = defineType({
       title: "Years in Business",
       type: "number",
       initialValue: 8,
+    }),
+
+    // ── Homepage Hero Section ──
+    defineField({
+      name: "heroTitle",
+      title: "Hero Headline",
+      type: "string",
+      description: "Main headline on homepage hero",
+      initialValue: "Professional Painting & Decorating Across Ireland",
+    }),
+    defineField({
+      name: "heroSubtext",
+      title: "Hero Subtext",
+      type: "text",
+      rows: 3,
+      description: "Subheading under the main headline",
+      initialValue: "Interior & exterior painting, kitchen respraying, and wallpapering. Free fixed-price quotes, quality trade paints, and zero mess left behind.",
+    }),
+    defineField({
+      name: "heroCtaText",
+      title: "Hero Primary Button Label",
+      type: "string",
+      initialValue: "Get a Free Fast Quote",
+    }),
+    defineField({
+      name: "heroSecondaryCtaText",
+      title: "Hero Call Button Label",
+      type: "string",
+      initialValue: "Call Us Now",
+    }),
+
+    // ── Bottom Call To Action Band ──
+    defineField({
+      name: "ctaHeading",
+      title: "CTA Band Heading",
+      type: "string",
+      initialValue: "Ready to transform your home?",
+    }),
+    defineField({
+      name: "ctaSubtext",
+      title: "CTA Band Subtext",
+      type: "string",
+      initialValue: "Get a fast, free, fixed-price quote with no obligation today.",
+    }),
+    defineField({
+      name: "ctaButtonText",
+      title: "CTA Band Button Label",
+      type: "string",
+      initialValue: "Get Your Free Quote",
     }),
   ],
 });
