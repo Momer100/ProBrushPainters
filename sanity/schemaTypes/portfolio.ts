@@ -4,17 +4,26 @@ export const portfolio = defineType({
   name: "portfolio",
   title: "Work & Portfolio",
   type: "document",
+  fieldsets: [
+    { name: "header", title: "Section Heading", options: { collapsible: true, collapsed: false } },
+    { name: "beforeAfter1", title: "Before & After #1 (Side-by-Side)", options: { collapsible: true, collapsed: false } },
+    { name: "transformation2", title: "Room Transformation #2", options: { collapsible: true, collapsed: true } },
+    { name: "generalGallery", title: "General Portfolio Gallery", options: { collapsible: true, collapsed: true } },
+  ],
   fields: [
     defineField({
       name: "title",
       title: "Section Title",
       type: "string",
+      fieldset: "header",
       initialValue: "Our Work & Transformations",
     }),
+
     defineField({
       name: "transformation1",
-      title: "Before & After #1 (Side-by-Side)",
+      title: "Before & After #1",
       type: "object",
+      fieldset: "beforeAfter1",
       fields: [
         defineField({
           name: "beforeImage",
@@ -32,10 +41,12 @@ export const portfolio = defineType({
         }),
       ],
     }),
+
     defineField({
       name: "transformation2",
-      title: "Room Transformation #2 (Detailed)",
+      title: "Room Transformation #2",
       type: "object",
+      fieldset: "transformation2",
       fields: [
         defineField({
           name: "beforeImage",
@@ -61,10 +72,12 @@ export const portfolio = defineType({
         }),
       ],
     }),
+
     defineField({
       name: "gallery",
       title: "General Portfolio Gallery",
       type: "array",
+      fieldset: "generalGallery",
       of: [
         {
           type: "image",
