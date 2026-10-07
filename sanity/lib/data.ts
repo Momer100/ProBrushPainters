@@ -9,6 +9,8 @@ import {
   processStepsQuery,
   aboutPageQuery,
   locationPageQuery,
+  postsQuery,
+  postBySlugQuery,
 } from "./queries";
 import { sanityConfigured } from "../env";
 import { site } from "@/config/site";
@@ -238,4 +240,14 @@ export async function getPortfolioData() {
     transformation2,
     gallery,
   };
+}
+
+export async function getPosts() {
+  const docs = await sanityFetch<any[]>(postsQuery);
+  return docs || [];
+}
+
+export async function getPostBySlug(slug: string) {
+  const doc = await sanityFetch<any>(postBySlugQuery, { slug });
+  return doc || null;
 }

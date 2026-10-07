@@ -7,6 +7,9 @@ import { testimonial } from "./testimonial";
 import { processStep } from "./processStep";
 import { aboutPage } from "./aboutPage";
 import { locationPage } from "./locationPage";
+import { author } from "./author";
+import { category } from "./category";
+import { post } from "./post";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   siteSettings,
@@ -17,4 +20,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   testimonial,
   processStep,
   locationPage,
+  author,
+  category,
+  post,
 ];

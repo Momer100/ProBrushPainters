@@ -65,4 +65,16 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem("locationPage").title("Location Pages"),
             ])
         ),
+
+      S.listItem()
+        .title("Blog & Content")
+        .child(
+          S.list()
+            .title("Blog & Content")
+            .items([
+              S.documentTypeListItem("post").title("Blog Posts"),
+              S.documentTypeListItem("author").title("Authors"),
+              S.documentTypeListItem("category").title("Categories"),
+            ])
+        ),
     ]);

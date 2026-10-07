@@ -63,3 +63,22 @@ export const locationPageQuery = groq`*[_type == "locationPage" && slug.current 
   customHeadline,
   customDescription
 }`;
+
+export const postsQuery = groq`*[_type == "post"] | order(publishedAt desc){
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  mainImage { ..., "url": asset->url, alt },
+  "authorName": author->name
+}`;
+
+export const postBySlugQuery = groq`*[_type == "post" && slug.current == $slug][0]{
+  title,
+  slug,
+  publishedAt,
+  mainImage { ..., "url": asset->url, alt },
+  "authorName": author->name,
+  "authorImage": author->image { ..., "url": asset->url, alt },
+  body
+}`;
