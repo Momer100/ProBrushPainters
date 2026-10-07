@@ -64,7 +64,7 @@ export const locationPageQuery = groq`*[_type == "locationPage" && slug.current 
   customDescription
 }`;
 
-export const postsQuery = groq`*[_type == "post"] | order(publishedAt desc){
+export const postsQuery = groq`*[_type == "post" && defined(slug.current)] | order(publishedAt desc){
   title,
   slug,
   excerpt,

@@ -1,11 +1,23 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
 import { getPostBySlug, getPosts } from "@/../sanity/lib/data";
+import { urlFor } from "@/../sanity/lib/image";
 import CtaBand from "@/components/cta-band";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { site } from "@/config/site";
+
+function calculateReadingTime(body: any[]): number {
+  if (!body || !Array.isArray(body)) return 1;
+  const text = body
+    .filter((block) => block._type === "block" && block.children)
+    .map((block) => block.children.map((child: any) => child.text).join(""))
+    .join(" ");
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -14,7 +26,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
@@ -25,6 +37,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} | ${site.name} Blog`,
     description: post.excerpt,
+    openGraph: {
+      title: `${post.title} | ${site.name} Blog`,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.publishedAt,
+      images: post.mainImage?.url ? [post.mainImage.url] : [],
+    },
   };
 }
 
@@ -42,15 +61,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         if (!value?.asset?._ref && !value?.url) {
           return null;
         }
+        const imageUrl = value.url || urlFor(value).url();
         return (
           <div className="relative my-8 aspect-video overflow-hidden rounded-xl bg-muted">
             <Image
-              src={value.url || ""}
+              src={imageUrl}
               alt={value.alt || "Blog image"}
               fill
               className="object-cover"
             />
           </div>
+        );
+      },
+    },
+    marks: {
+      link: ({ children, value }: any) => {
+        const rel = !value.href.startsWith("/") ? "noreferrer noopener" : undefined;
+        const target = !value.href.startsWith("/") ? "_blank" : undefined;
+        return (
+          <a href={value.href} rel={rel} target={target} className="text-accent hover:underline font-medium">
+            {children}
+          </a>
         );
       },
     },
@@ -110,6 +141,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     year: "numeric",
                   })}
                 </time>
+              )}
+              {post.body && (
+                <>
+                  <span>•</span>
+                  <div className="flex items-center">
+                    <Clock className="mr-1 h-3.5 w-3.5" />
+                    {calculateReadingTime(post.body)} min read
+                  </div>
+                </>
               )}
             </div>
           </header>
