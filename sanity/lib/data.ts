@@ -15,12 +15,34 @@ import {
 import { sanityConfigured } from "../env";
 import { site } from "@/config/site";
 
+import { draftMode } from "next/headers";
+
 // Query Sanity with 60s revalidate; returns null (→ fallback) if CMS
 // is not configured or query fails, ensuring site is always robust.
 async function sanityFetch<T>(query: string, params: Record<string, any> = {}): Promise<T | null> {
   if (!sanityConfigured) return null;
   try {
-    return await client.fetch<T>(query, params, { next: { revalidate: 60 } });
+    let isDraftMode = false;
+    try {
+      const draft = await draftMode();
+      isDraftMode = draft.isEnabled;
+    } catch (e) {
+      // Ignore: called outside request context
+    }
+    
+    const token = process.env.SANITY_API_READ_TOKEN;
+    
+    const fetchOptions: any = {};
+    if (isDraftMode && token) {
+      fetchOptions.token = token;
+      fetchOptions.perspective = "previewDrafts";
+      fetchOptions.useCdn = false;
+      fetchOptions.next = { revalidate: 0 };
+    } else {
+      fetchOptions.next = { revalidate: 60 };
+    }
+
+    return await client.fetch<T>(query, params, fetchOptions);
   } catch (err) {
     console.error("[sanity] fetch failed:", (err as Error).message);
     return null;

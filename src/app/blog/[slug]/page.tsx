@@ -35,11 +35,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${post.title} | ${site.name} Blog`,
-    description: post.excerpt,
+    title: post.metaTitle ? post.metaTitle : `${post.title} | ${site.name} Blog`,
+    description: post.metaDescription ? post.metaDescription : post.excerpt,
     openGraph: {
-      title: `${post.title} | ${site.name} Blog`,
-      description: post.excerpt,
+      title: post.metaTitle ? post.metaTitle : `${post.title} | ${site.name} Blog`,
+      description: post.metaDescription ? post.metaDescription : post.excerpt,
       type: "article",
       publishedTime: post.publishedAt,
       images: post.mainImage?.url ? [post.mainImage.url] : [],
@@ -101,9 +101,28 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     },
   };
 
+  const faqSchema = post.faqs && post.faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": post.faqs.map((faq: any) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
   return (
     <>
       <article className="py-16 lg:py-24 bg-white">
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
         <div className="container max-w-3xl">
           <Link
             href="/blog"
@@ -173,6 +192,29 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <p className="text-muted-foreground">This post has no content.</p>
             )}
           </div>
+
+          {post.faqs && post.faqs.length > 0 && (
+            <div className="mt-16 pt-16 border-t">
+              <h2 className="text-3xl font-extrabold text-primary mb-8">Frequently Asked Questions</h2>
+              <div className="space-y-4">
+                {post.faqs.map((faq: any, index: number) => (
+                  <details key={index} className="group border rounded-lg bg-gray-50 [&_summary::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-primary">
+                      {faq.question}
+                      <span className="ml-4 transition-transform group-open:rotate-180 text-muted-foreground">
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div className="px-6 pb-6 text-muted-foreground whitespace-pre-wrap">
+                      {faq.answer}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </article>
       <CtaBand />

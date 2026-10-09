@@ -75,6 +75,10 @@ export const postsQuery = groq`*[_type == "post" && defined(slug.current)] | ord
 
 export const postBySlugQuery = groq`*[_type == "post" && slug.current == $slug][0]{
   title,
+  metaTitle,
+  metaDescription,
+  excerpt,
+  faqs,
   slug,
   publishedAt,
   mainImage { ..., "url": asset->url, alt },

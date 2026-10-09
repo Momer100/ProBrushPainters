@@ -4,6 +4,10 @@ export const post = defineType({
   name: "post",
   title: "Post",
   type: "document",
+  fieldsets: [
+    { name: "seo", title: "SEO Settings" },
+    { name: "faqs", title: "Frequently Asked Questions" },
+  ],
   fields: [
     defineField({
       name: "title",
@@ -34,6 +38,15 @@ export const post = defineType({
       options: {
         hotspot: true,
       },
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alternative Text",
+          description: "Describe the image for screen readers and search engines.",
+          validation: (Rule) => Rule.required(),
+        })
+      ]
     }),
     defineField({
       name: "categories",
@@ -66,6 +79,56 @@ export const post = defineType({
           options: {
             hotspot: true,
           },
+          fields: [
+            defineField({
+              name: "alt",
+              type: "string",
+              title: "Alternative Text",
+              description: "Describe the image for screen readers and search engines.",
+              validation: (Rule) => Rule.required(),
+            })
+          ]
+        },
+      ],
+    }),
+    defineField({
+      name: "metaTitle",
+      title: "Meta Title",
+      type: "string",
+      fieldset: "seo",
+      description: "Custom meta title for the <title> tag and OG title. Leave blank to use the post title.",
+    }),
+    defineField({
+      name: "metaDescription",
+      title: "Meta Description",
+      type: "text",
+      rows: 2,
+      fieldset: "seo",
+      description: "Custom meta description. Leave blank to use the excerpt.",
+    }),
+    defineField({
+      name: "faqs",
+      title: "FAQs",
+      type: "array",
+      fieldset: "faqs",
+      description: "Add frequently asked questions related to this post. These will appear at the bottom of the post and generate Google FAQ rich snippets.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "question",
+              title: "Question",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "answer",
+              title: "Answer",
+              type: "text",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
         },
       ],
     }),
