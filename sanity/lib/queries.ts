@@ -8,7 +8,24 @@ export const servicesQuery = groq`*[_type == "service"]{
   icon,
   blurb,
   long,
-  includes
+  includes,
+  heroImage { ..., "url": asset->url, alt }
+}`;
+
+export const serviceBySlugQuery = groq`*[_type == "service" && id.current == $slug][0]{
+  "id": id.current,
+  title,
+  icon,
+  blurb,
+  long,
+  includes,
+  metaTitle,
+  metaDescription,
+  heroImage { ..., "url": asset->url, alt },
+  heroHeadline,
+  heroText,
+  content,
+  faqs
 }`;
 
 export const portfolioQuery = groq`*[_type == "portfolio"][0]{

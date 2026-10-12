@@ -3,6 +3,7 @@ import { urlFor } from "./image";
 import {
   siteSettingsQuery,
   servicesQuery,
+  serviceBySlugQuery,
   portfolioQuery,
   quoteItemsQuery,
   testimonialsQuery,
@@ -98,6 +99,63 @@ export async function getServices() {
     long: d.long || "",
     includes: d.includes || [],
   }));
+}
+
+export type ServiceDoc = {
+  id: string;
+  title: string;
+  icon: string;
+  blurb: string;
+  long: string;
+  includes: string[];
+  metaTitle: string | null;
+  metaDescription: string | null;
+  heroImage: { url: string; alt: string } | null;
+  heroHeadline: string | null;
+  heroText: string | null;
+  content: any | null;
+  faqs: Array<{ question: string; answer: string }> | null;
+};
+
+const defaultServiceImages: Record<string, string> = {
+  "interior-painting": "/images/s-l1600 (23).jpg",
+  "exterior-painting": "/images/s-l1600 (1).jpg",
+  "kitchen-cabinet-respraying": "/images/s-l1600 (20).jpg",
+  "commercial-painting": "/images/s-l1600 (3).jpg",
+  "wallpaper-hanging": "/images/s-l1600 (2).jpg",
+  "plastering-drywall-repair": "/images/s-l1600 (11).jpg",
+  "woodwork-doors-skirting": "/images/s-l1600 (22).jpg",
+  "specialist-coatings": "/images/s-l1600 (17).jpg",
+  "rental-turnaround-painting": "/images/s-l1600 (15).jpg",
+  "colour-consultation": "/images/s-l1600 (19).jpg",
+};
+
+export async function getServiceBySlug(slug: string): Promise<ServiceDoc | null> {
+  const doc = await sanityFetch<any>(serviceBySlugQuery, { slug });
+  const staticService = site.services.find((s) => s.id === slug);
+
+  if (!doc && !staticService) return null;
+
+  const defaultImg = defaultServiceImages[slug] || "/images/hero.jpg";
+  const heroImage = doc?.heroImage?.url
+    ? { url: urlFor(doc.heroImage).width(1200).quality(85).url(), alt: doc.heroImage.alt || doc.title || "" }
+    : { url: defaultImg, alt: `${doc?.title || staticService?.title || "Professional painting"} in Ireland` };
+
+  return {
+    id: doc?.id || staticService?.id || slug,
+    title: doc?.title || staticService?.title || "",
+    icon: doc?.icon || staticService?.icon || "PaintRoller",
+    blurb: doc?.blurb || staticService?.blurb || "",
+    long: doc?.long || staticService?.long || "",
+    includes: (doc?.includes?.length ? doc.includes : (staticService?.includes || [])) as string[],
+    metaTitle: doc?.metaTitle || null,
+    metaDescription: doc?.metaDescription || null,
+    heroImage,
+    heroHeadline: doc?.heroHeadline || null,
+    heroText: doc?.heroText || null,
+    content: doc?.content || null,
+    faqs: doc?.faqs?.length ? doc.faqs : null,
+  };
 }
 
 export async function getQuoteItems() {
