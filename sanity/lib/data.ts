@@ -113,6 +113,8 @@ export type ServiceDoc = {
   heroImage: { url: string; alt: string } | null;
   heroHeadline: string | null;
   heroText: string | null;
+  keyFacts: Array<{ label: string; value: string }> | null;
+  gallery: Array<{ src: string; alt: string }>;
   content: any | null;
   faqs: Array<{ question: string; answer: string }> | null;
 };
@@ -141,9 +143,27 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDoc | null>
     ? { url: urlFor(doc.heroImage).width(1200).quality(85).url(), alt: doc.heroImage.alt || doc.title || "" }
     : { url: defaultImg, alt: `${doc?.title || staticService?.title || "Professional painting"} in Ireland` };
 
+  const title = doc?.title || staticService?.title || "";
+
+  // Per-service gallery from CMS; fall back to the general portfolio photos so the
+  // section is never empty. Alt text stays descriptive and never claims a location.
+  let gallery: Array<{ src: string; alt: string }> = (doc?.gallery || [])
+    .filter((im: any) => im?.url || im?.asset?._ref)
+    .map((im: any) => ({
+      src: urlFor(im).width(1000).quality(80).url(),
+      alt: im.alt || `${title} project by ${site.name}`,
+    }));
+  if (gallery.length === 0) {
+    const { gallery: portfolio } = await getPortfolioData();
+    gallery = portfolio.slice(0, 6).map((g) => ({
+      src: g.src,
+      alt: `${title || "Painting & decorating"} project by ${site.name}`,
+    }));
+  }
+
   return {
     id: doc?.id || staticService?.id || slug,
-    title: doc?.title || staticService?.title || "",
+    title,
     icon: doc?.icon || staticService?.icon || "PaintRoller",
     blurb: doc?.blurb || staticService?.blurb || "",
     long: doc?.long || staticService?.long || "",
@@ -153,9 +173,30 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDoc | null>
     heroImage,
     heroHeadline: doc?.heroHeadline || null,
     heroText: doc?.heroText || null,
+    keyFacts: doc?.keyFacts?.length ? doc.keyFacts : null,
+    gallery,
     content: doc?.content || null,
     faqs: doc?.faqs?.length ? doc.faqs : null,
   };
+}
+
+// Testimonials that match a given service category (case-insensitive). Returns [] if
+// none — the service page then hides its reviews grid (keeps the Google-review CTA).
+export async function getTestimonialsForService(category: string) {
+  const all = await getTestimonials();
+  if (!all) return [];
+  const title = category.toLowerCase();
+  const firstWord = title.split(" ")[0];
+  const matched = all.filter((t) => {
+    const cat = (t.serviceCategory || "").toLowerCase();
+    if (!cat) return false;
+    return (
+      title.includes(cat) ||
+      cat.includes(title) ||
+      (firstWord.length > 3 && cat.includes(firstWord))
+    );
+  });
+  return matched;
 }
 
 export async function getQuoteItems() {

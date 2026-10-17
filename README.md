@@ -80,6 +80,27 @@ also offers WhatsApp / call / email options for visitors who prefer them.
 The quote form's line items and starting prices are also in `src/config/site.ts`
 (`quoteItems`) — edit titles/prices there and the builder updates automatically.
 
+## Content management (Sanity CMS)
+
+Most editable content (services, testimonials, portfolio, process steps, about page,
+blog posts, site settings) is managed in **Sanity**. Edit it in the Studio at `/studio`.
+The site falls back to the hardcoded values in `src/config/site.ts` whenever the CMS
+isn't configured or a field is empty, so it always renders.
+
+**To connect the CMS in production,** set these in Vercel (Settings → Environment
+Variables), then redeploy:
+
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=<your Sanity project id>
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_READ_TOKEN=<a read token>   # enables Draft Mode previews
+```
+
+Until `NEXT_PUBLIC_SANITY_PROJECT_ID` is set (and service docs are **published**), the
+live site uses the static fallback service list — that's the signal the CMS isn't wired
+up yet. Service pages read: hero image/headline/text, key facts, work gallery, rich
+body content, "what's included", FAQs and SEO meta — all editable per service.
+
 ## Bing IndexNow (fast re-indexing)
 
 The IndexNow key file is served at `/a9b0b1bc1c054a138a95674ca7bf3a3e.txt`. After

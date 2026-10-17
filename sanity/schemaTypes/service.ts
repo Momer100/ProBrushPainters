@@ -8,6 +8,7 @@ export const service = defineType({
     { name: "basicInfo", title: "Basic Information", options: { collapsible: true, collapsed: false } },
     { name: "seo", title: "SEO Settings", options: { collapsible: true, collapsed: false } },
     { name: "hero", title: "Hero Section", options: { collapsible: true, collapsed: false } },
+    { name: "gallery", title: "Work Gallery", options: { collapsible: true, collapsed: true } },
     { name: "pageContent", title: "Page Content", options: { collapsible: true, collapsed: false } },
     { name: "descriptions", title: "Detailed Descriptions", options: { collapsible: true, collapsed: false } },
     { name: "bulletPoints", title: "Key Features & Includes", options: { collapsible: true, collapsed: false } },
@@ -82,6 +83,49 @@ export const service = defineType({
       rows: 3,
       fieldset: "hero",
       description: "Custom introductory paragraph for the hero section.",
+    }),
+    defineField({
+      name: "keyFacts",
+      title: "Hero Key Facts",
+      type: "array",
+      fieldset: "hero",
+      description:
+        "Small at-a-glance facts shown in the hero (e.g. Covers → Walls, ceilings & woodwork). Only add facts that are TRUE — leave blank to use the safe defaults.",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({ name: "label", title: "Label", type: "string", validation: (Rule) => Rule.required() }),
+            defineField({ name: "value", title: "Value", type: "string", validation: (Rule) => Rule.required() }),
+          ],
+          preview: {
+            select: { title: "label", subtitle: "value" },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: "gallery",
+      title: "Work Gallery",
+      type: "array",
+      fieldset: "gallery",
+      description:
+        "Photos of real projects for this service. Shown as an image grid. Leave empty to use the site's general portfolio photos.",
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              type: "string",
+              title: "Alternative Text",
+              description: "Describe the photo for screen readers and search engines.",
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
     }),
     defineField({
       name: "content",

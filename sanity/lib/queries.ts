@@ -24,6 +24,8 @@ export const serviceBySlugQuery = groq`*[_type == "service" && id.current == $sl
   heroImage { ..., "url": asset->url, alt },
   heroHeadline,
   heroText,
+  keyFacts[]{ label, value },
+  gallery[]{ ..., "url": asset->url, alt },
   content,
   faqs
 }`;
