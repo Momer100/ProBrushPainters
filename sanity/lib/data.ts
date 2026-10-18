@@ -41,7 +41,9 @@ async function sanityFetch<T>(query: string, params: Record<string, any> = {}): 
       fetchOptions.useCdn = false;
       fetchOptions.next = { revalidate: 0 };
     } else {
-      fetchOptions.next = { revalidate: 60 };
+      // Tagged so the /api/revalidate webhook can purge ALL Sanity content instantly
+      // via revalidateTag("sanity"); the 60s timer is just a safety net.
+      fetchOptions.next = { revalidate: 60, tags: ["sanity"] };
     }
 
     return await client.fetch<T>(query, params, fetchOptions);

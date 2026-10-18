@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -10,13 +10,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
     }
 
-    // Revalidate the entire application layout instantly
+    // Purge all Sanity-driven content instantly (tagged in sanityFetch), plus the
+    // whole route tree as a belt-and-braces fallback.
+    revalidateTag("sanity");
     revalidatePath("/", "layout");
 
     return NextResponse.json({
       revalidated: true,
       now: Date.now(),
-      message: "Revalidated all pages successfully",
+      message: "Revalidated all Sanity content successfully",
     });
   } catch (err) {
     return NextResponse.json(
