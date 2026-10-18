@@ -24,6 +24,21 @@ export const processStep = defineType({
       rows: 3,
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "image",
+      title: "Step Photo (optional)",
+      type: "image",
+      options: { hotspot: true },
+      description: "Optional photo for this step (e.g. floors protected, surface prep).",
+      fields: [
+        defineField({
+          name: "alt",
+          type: "string",
+          title: "Alternative Text",
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+    }),
   ],
   orderings: [
     {

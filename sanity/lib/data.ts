@@ -5,6 +5,7 @@ import {
   servicesQuery,
   serviceBySlugQuery,
   portfolioQuery,
+  beforeAfterQuery,
   quoteItemsQuery,
   testimonialsQuery,
   processStepsQuery,
@@ -199,6 +200,25 @@ export async function getTestimonialsForService(category: string) {
   return matched;
 }
 
+// Before/after for service pages. Returns null unless REAL before+after photos exist in
+// the CMS portfolio — so the section hides until the team uploads them (no stock placeholder).
+export async function getBeforeAfter(): Promise<
+  { before: { src: string; alt: string }; after: { src: string; alt: string } } | null
+> {
+  const d = await sanityFetch<any>(beforeAfterQuery);
+  if (!d?.before?.url || !d?.after?.url) return null;
+  return {
+    before: {
+      src: urlFor(d.before).width(1000).quality(85).url(),
+      alt: d.before.alt || "Before",
+    },
+    after: {
+      src: urlFor(d.after).width(1000).quality(85).url(),
+      alt: d.after.alt || "After",
+    },
+  };
+}
+
 export async function getQuoteItems() {
   const docs = await sanityFetch<any[]>(quoteItemsQuery);
   if (!docs || docs.length === 0) return site.quoteItems;
@@ -224,12 +244,19 @@ export async function getTestimonials() {
   }));
 }
 
-export async function getProcessSteps() {
+export async function getProcessSteps(): Promise<
+  Array<{ title: string; text: string; image: { src: string; alt: string } | null }>
+> {
   const docs = await sanityFetch<any[]>(processStepsQuery);
-  if (!docs || docs.length === 0) return site.steps;
+  if (!docs || docs.length === 0) {
+    return site.steps.map((s) => ({ title: s.title, text: s.text, image: null }));
+  }
   return docs.map((d) => ({
     title: d.title,
     text: d.text,
+    image: d.image?.url
+      ? { src: urlFor(d.image).width(800).quality(80).url(), alt: d.image.alt || d.title }
+      : null,
   }));
 }
 

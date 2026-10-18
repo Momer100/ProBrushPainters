@@ -43,6 +43,11 @@ export const portfolioQuery = groq`*[_type == "portfolio"][0]{
   gallery[] { ..., "url": asset->url, alt, title }
 }`;
 
+export const beforeAfterQuery = groq`*[_type == "portfolio"][0]{
+  "before": transformation1.beforeImage{ ..., "url": asset->url, alt },
+  "after": transformation1.afterImage{ ..., "url": asset->url, alt }
+}`;
+
 export const quoteItemsQuery = groq`*[_type == "quoteItem"]{
   id,
   title,
@@ -63,7 +68,8 @@ export const testimonialsQuery = groq`*[_type == "testimonial"]{
 export const processStepsQuery = groq`*[_type == "processStep"] | order(stepNumber asc){
   stepNumber,
   title,
-  text
+  text,
+  image { ..., "url": asset->url, alt }
 }`;
 
 export const aboutPageQuery = groq`*[_type == "aboutPage"][0]{

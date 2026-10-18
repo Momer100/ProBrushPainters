@@ -31,6 +31,7 @@ import {
   getServices,
   getTestimonialsForService,
   getPosts,
+  getBeforeAfter,
 } from "@/../sanity/lib/data";
 import { urlFor } from "@/../sanity/lib/image";
 
@@ -147,10 +148,11 @@ export default async function ServicePage({
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
-  const [allServices, reviews, posts] = await Promise.all([
+  const [allServices, reviews, posts, beforeAfter] = await Promise.all([
     getServices(),
     getTestimonialsForService(service.title),
     getPosts(),
+    getBeforeAfter(),
   ]);
 
   const Icon = icons[service.icon] ?? PaintRoller;
@@ -343,6 +345,31 @@ export default async function ServicePage({
         </section>
       )}
 
+      {/* ───────── Before / After ───────── */}
+      {beforeAfter && (
+        <section className="border-t border-border/60 bg-secondary/30 py-16 lg:py-20">
+          <div className="container">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Before &amp; after</p>
+            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+              See the transformation
+            </h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
+              {[
+                { img: beforeAfter.before, label: "Before", cls: "bg-red-500/90" },
+                { img: beforeAfter.after, label: "After", cls: "bg-emerald-500/90" },
+              ].map((x) => (
+                <figure key={x.label} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 shadow-soft">
+                  <Image src={x.img.src} alt={x.img.alt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+                  <span className={`absolute left-4 top-4 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm ${x.cls}`}>
+                    {x.label}
+                  </span>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ───────── Rich body content (Portable Text from CMS) ───────── */}
       {service.content && service.content.length > 0 && (
         <section className="border-t border-border/60 bg-white py-16 lg:py-20">
@@ -445,6 +472,30 @@ export default async function ServicePage({
           </p>
           <div className="mt-6 flex justify-center">
             <GoogleReviewButton variant="white" />
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Tell us about your job (photo upload CTA) ───────── */}
+      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+        <div className="container">
+          <div className="rounded-2xl border border-border/80 bg-secondary/40 p-8 text-center sm:p-12">
+            <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+              Tell us about your {serviceLower}
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
+              Send a few photos of the rooms or surfaces and we&apos;ll come back with a
+              clear, fixed-price quote — no obligation.
+            </p>
+            <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/get-a-quote/" className={buttonVariants({ variant: "accent", size: "lg" })}>
+                Send photos for a quote
+              </Link>
+              <a href={`tel:${site.phoneHref}`} className={buttonVariants({ variant: "outline", size: "lg" })}>
+                <Phone className="h-4 w-4" />
+                {site.phoneDisplay}
+              </a>
+            </div>
           </div>
         </div>
       </section>
