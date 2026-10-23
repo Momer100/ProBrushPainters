@@ -139,6 +139,76 @@ const portableTextComponents = {
   },
 };
 
+/**
+ * Obvious, non-photographic placeholder tile. Used wherever the CMS has no image yet so
+ * the full reference layout is visible. It's clearly a graphic (icon on a muted panel),
+ * never a fake photo — so it makes no false claim about real ProBrush work. The moment a
+ * real image is added in the CMS, the placeholder is replaced automatically.
+ */
+function PlaceholderTile({
+  Icon,
+  label,
+  className = "",
+}: {
+  Icon: LucideIcon;
+  label?: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-secondary/60 via-muted to-secondary/40 ${className}`}
+    >
+      <Icon className="h-10 w-10 text-accent/40" />
+      {label && (
+        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground/70">
+          {label}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Truthful, generic service write-up shown when the CMS "Content" field is empty. Same
+ * honesty level as the existing hero/FAQ fallbacks — no invented numbers, prices, or
+ * claims. Replaced by the CMS body as soon as one is added.
+ */
+function DefaultServiceBody({ service }: { service: any }) {
+  const lower = service.title.toLowerCase();
+  const includes: string[] = service.includes || [];
+  return (
+    <>
+      <h2>Professional {lower} done properly</h2>
+      <p>
+        Our {lower} service is built around thorough preparation and premium trade-quality
+        finishes. We take the time to protect your space, prepare every surface correctly,
+        and apply the right materials for a result that looks excellent and lasts.
+      </p>
+      {includes.length > 0 && (
+        <>
+          <h3>What the work typically covers</h3>
+          <ul>
+            {includes.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <h3>Preparation and finish</h3>
+      <p>
+        Good {lower} is mostly about the preparation. We clean, fill, sand and prime where
+        needed so the finish goes on evenly and holds up over time, keeping the work area
+        tidy throughout and leaving it clean on completion.
+      </p>
+      <p>
+        Every job is quoted individually with a clear, fixed price and no hidden extras.
+        For a free, no-obligation quote, call us on {site.phoneDisplay} or send a few
+        photos through our online quote form.
+      </p>
+    </>
+  );
+}
+
 export default async function ServicePage({
   params,
 }: {
@@ -292,9 +362,9 @@ export default async function ServicePage({
               </a>
             </div>
 
-            {service.heroImage && (
-              <div className="lg:col-span-5">
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border/80 bg-muted shadow-lg sm:aspect-[16/10] lg:aspect-[4/3]">
+            <div className="lg:col-span-5">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border/80 bg-muted shadow-lg sm:aspect-[16/10] lg:aspect-[4/3]">
+                {service.heroImage ? (
                   <Image
                     src={service.heroImage.url}
                     alt={service.heroImage.alt || service.title}
@@ -303,9 +373,11 @@ export default async function ServicePage({
                     sizes="(max-width: 1024px) 100vw, 42vw"
                     className="object-cover"
                   />
-                </div>
+                ) : (
+                  <PlaceholderTile Icon={Icon} label="Project photo" className="absolute inset-0" />
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Key facts strip */}
@@ -321,65 +393,73 @@ export default async function ServicePage({
       </section>
 
       {/* ───────── Work gallery ───────── */}
-      {service.gallery && service.gallery.length > 0 && (
-        <section className="border-t border-border/60 bg-white py-16 lg:py-20">
-          <div className="container">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Our work</p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
-              Recent {serviceLower} projects
-            </h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {service.gallery.slice(0, 6).map((img, idx) => (
-                <figure key={idx} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/60 bg-muted shadow-sm">
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                </figure>
-              ))}
-            </div>
+      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+        <div className="container">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Our work</p>
+          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+            Recent {serviceLower} projects
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {service.gallery && service.gallery.length > 0
+              ? service.gallery.slice(0, 6).map((img, idx) => (
+                  <figure key={idx} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/60 bg-muted shadow-sm">
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </figure>
+                ))
+              : Array.from({ length: 6 }).map((_, idx) => (
+                  <figure key={idx} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border/60 bg-muted shadow-sm">
+                    <PlaceholderTile Icon={Icon} label="Project photo" className="absolute inset-0" />
+                  </figure>
+                ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ───────── Before / After ───────── */}
-      {beforeAfter && (
-        <section className="border-t border-border/60 bg-secondary/30 py-16 lg:py-20">
-          <div className="container">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Before &amp; after</p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
-              See the transformation
-            </h2>
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
-              {[
-                { img: beforeAfter.before, label: "Before", cls: "bg-red-500/90" },
-                { img: beforeAfter.after, label: "After", cls: "bg-emerald-500/90" },
-              ].map((x) => (
-                <figure key={x.label} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 shadow-soft">
+      <section className="border-t border-border/60 bg-secondary/30 py-16 lg:py-20">
+        <div className="container">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Before &amp; after</p>
+          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+            See the transformation
+          </h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            {[
+              { img: beforeAfter?.before, label: "Before", cls: "bg-red-500/90" },
+              { img: beforeAfter?.after, label: "After", cls: "bg-emerald-500/90" },
+            ].map((x) => (
+              <figure key={x.label} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 shadow-soft">
+                {x.img ? (
                   <Image src={x.img.src} alt={x.img.alt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
-                  <span className={`absolute left-4 top-4 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm ${x.cls}`}>
-                    {x.label}
-                  </span>
-                </figure>
-              ))}
-            </div>
+                ) : (
+                  <PlaceholderTile Icon={Icon} label={`${x.label} photo`} className="absolute inset-0" />
+                )}
+                <span className={`absolute left-4 top-4 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg backdrop-blur-sm ${x.cls}`}>
+                  {x.label}
+                </span>
+              </figure>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ───────── Rich body content (Portable Text from CMS) ───────── */}
-      {service.content && service.content.length > 0 && (
-        <section className="border-t border-border/60 bg-white py-16 lg:py-20">
-          <div className="container max-w-4xl">
-            <div className="prose prose-lg prose-gray max-w-none">
+      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+        <div className="container max-w-4xl">
+          <div className="prose prose-lg prose-gray max-w-none">
+            {service.content && service.content.length > 0 ? (
               <PortableText value={service.content} components={portableTextComponents} />
-            </div>
+            ) : (
+              <DefaultServiceBody service={service} />
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ───────── What's included ───────── */}
       {service.includes && service.includes.length > 0 && (
