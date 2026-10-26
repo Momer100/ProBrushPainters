@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import { site } from "@/config/site";
 import SiteHeader from "@/components/site-header";
@@ -10,6 +10,22 @@ import CookieConsent from "@/components/cookie-consent";
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
+});
+
+// Premium editorial serifs used by the re-skinned service pages (scoped via `.service-skin`).
+// Fraunces = high-contrast display serif with elegant italics; EB Garamond = refined body serif.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const garamond = EB_Garamond({
+  subsets: ["latin"],
+  variable: "--font-garamond",
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -69,7 +85,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={jakarta.variable}>
+    <html lang="en" className={`${jakarta.variable} ${fraunces.variable} ${garamond.variable}`}>
       <body className="bg-background font-sans text-foreground">
         <SiteHeader />
         <main className="pb-[4.5rem] md:pb-0">{children}</main>

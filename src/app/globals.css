@@ -54,3 +54,43 @@
     text-wrap: balance;
   }
 }
+
+/*
+ * Premium editorial skin for the service pages (Borthwick Decorators reference).
+ * Scoped: wrapping a subtree in `.service-skin` locally redefines the design tokens to a
+ * warm cream / charcoal-ink / muted-gold palette and switches the default font to the
+ * body serif. Because the page's sections use token classes (bg-background, text-primary,
+ * text-accent, border-border…), they re-colour automatically. The site header and footer
+ * render OUTSIDE this wrapper, so they keep the global navy/amber brand.
+ */
+.service-skin {
+  /* Warm cream paper */
+  --background: 40 31% 96%;
+  /* Warm charcoal ink */
+  --foreground: 30 7% 15%;
+
+  /* Primary: near-black warm ink (headings, dark buttons, dark bands) */
+  --primary: 30 8% 14%;
+  --primary-foreground: 40 33% 97%;
+
+  /* Accent: muted brass / gold */
+  --accent: 36 30% 44%;
+  --accent-foreground: 40 33% 97%;
+
+  --secondary: 40 24% 92%;
+  --secondary-foreground: 30 8% 18%;
+
+  --muted: 40 20% 91%;
+  --muted-foreground: 35 8% 38%;
+
+  --card: 40 33% 98%;
+  --card-foreground: 30 7% 15%;
+
+  --border: 38 17% 84%;
+  --input: 38 17% 82%;
+  --ring: 36 30% 44%;
+
+  --radius: 0.25rem;
+
+  font-family: var(--font-garamond), Georgia, "Times New Roman", serif;
+}

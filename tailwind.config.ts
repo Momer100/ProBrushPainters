@@ -50,6 +50,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        display: ["var(--font-fraunces)", "Georgia", "serif"],
+        serif: ["var(--font-garamond)", "Georgia", "serif"],
       },
       boxShadow: {
         soft: "0 8px 30px rgba(16, 42, 67, 0.08)",

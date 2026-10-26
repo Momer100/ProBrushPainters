@@ -26,6 +26,7 @@ import CtaBand from "@/components/cta-band";
 import ProcessSection from "@/components/process-section";
 import RelatedAreas from "@/components/related-areas";
 import GoogleReviewButton from "@/components/google-review-button";
+import ServiceStory from "@/components/service-story";
 import {
   getServiceBySlug,
   getServices,
@@ -113,7 +114,7 @@ const portableTextComponents = {
   },
   block: {
     h2: ({ children }: any) => (
-      <h2 className="mt-12 mb-5 border-b border-border/60 pb-3 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+      <h2 className="mt-12 mb-5 border-b border-border/60 pb-3 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
         {children}
       </h2>
     ),
@@ -165,47 +166,6 @@ function PlaceholderTile({
         </span>
       )}
     </div>
-  );
-}
-
-/**
- * Truthful, generic service write-up shown when the CMS "Content" field is empty. Same
- * honesty level as the existing hero/FAQ fallbacks — no invented numbers, prices, or
- * claims. Replaced by the CMS body as soon as one is added.
- */
-function DefaultServiceBody({ service }: { service: any }) {
-  const lower = service.title.toLowerCase();
-  const includes: string[] = service.includes || [];
-  return (
-    <>
-      <h2>Professional {lower} done properly</h2>
-      <p>
-        Our {lower} service is built around thorough preparation and premium trade-quality
-        finishes. We take the time to protect your space, prepare every surface correctly,
-        and apply the right materials for a result that looks excellent and lasts.
-      </p>
-      {includes.length > 0 && (
-        <>
-          <h3>What the work typically covers</h3>
-          <ul>
-            {includes.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      <h3>Preparation and finish</h3>
-      <p>
-        Good {lower} is mostly about the preparation. We clean, fill, sand and prime where
-        needed so the finish goes on evenly and holds up over time, keeping the work area
-        tidy throughout and leaving it clean on completion.
-      </p>
-      <p>
-        Every job is quoted individually with a clear, fixed price and no hidden extras.
-        For a free, no-obligation quote, call us on {site.phoneDisplay} or send a few
-        photos through our online quote form.
-      </p>
-    </>
   );
 }
 
@@ -296,7 +256,7 @@ export default async function ServicePage({
   };
 
   return (
-    <>
+    <div className="service-skin bg-background text-foreground">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -318,7 +278,7 @@ export default async function ServicePage({
                 <Icon className="h-4 w-4" /> Painting &amp; Decorating
               </p>
 
-              <h1 className="mt-4 text-3xl font-extrabold leading-[1.12] tracking-tight text-primary text-balance sm:text-4xl lg:text-5xl">
+              <h1 className="mt-4 font-display text-4xl font-normal leading-[1.08] tracking-tight text-primary text-balance sm:text-5xl lg:text-6xl">
                 {service.heroHeadline || `Professional ${service.title} in ${site.location}`}
               </h1>
 
@@ -338,11 +298,11 @@ export default async function ServicePage({
               </div>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href={`tel:${site.phoneHref}`} className={buttonVariants({ variant: "accent", size: "lg" })}>
+                <a href={`tel:${site.phoneHref}`} className={buttonVariants({ variant: "primary", size: "lg", className: "rounded-sm" })}>
                   <Phone className="h-4 w-4" />
                   Call for a Free Quote
                 </a>
-                <Link href="/get-a-quote/" className={buttonVariants({ variant: "outline", size: "lg" })}>
+                <Link href="/get-a-quote/" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-sm" })}>
                   Get a Quote Online
                 </Link>
               </div>
@@ -363,7 +323,7 @@ export default async function ServicePage({
             </div>
 
             <div className="lg:col-span-5">
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border/80 bg-muted shadow-lg sm:aspect-[16/10] lg:aspect-[4/3]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-border/80 bg-muted shadow-lg sm:aspect-[16/10] lg:aspect-[4/3]">
                 {service.heroImage ? (
                   <Image
                     src={service.heroImage.url}
@@ -381,9 +341,9 @@ export default async function ServicePage({
           </div>
 
           {/* Key facts strip */}
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/80 bg-border/60 sm:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-border/80 bg-border/60 sm:grid-cols-4">
             {keyFacts.slice(0, 4).map((f: { label: string; value: string }) => (
-              <div key={f.label} className="bg-white p-5">
+              <div key={f.label} className="bg-card p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-accent">{f.label}</p>
                 <p className="mt-1 text-sm font-semibold text-primary">{f.value}</p>
               </div>
@@ -392,11 +352,14 @@ export default async function ServicePage({
         </div>
       </section>
 
+      {/* ───────── Editorial story band (Borthwick-style) ───────── */}
+      <ServiceStory />
+
       {/* ───────── Work gallery ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+      <section className="border-t border-border/60 bg-background py-16 lg:py-24">
         <div className="container">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Our work</p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+          <h2 className="mt-2 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
             Recent {serviceLower} projects
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -425,7 +388,7 @@ export default async function ServicePage({
       <section className="border-t border-border/60 bg-secondary/30 py-16 lg:py-20">
         <div className="container">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Before &amp; after</p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+          <h2 className="mt-2 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
             See the transformation
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -448,18 +411,16 @@ export default async function ServicePage({
         </div>
       </section>
 
-      {/* ───────── Rich body content (Portable Text from CMS) ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
-        <div className="container max-w-4xl">
-          <div className="prose prose-lg prose-gray max-w-none">
-            {service.content && service.content.length > 0 ? (
+      {/* ───────── Rich body content (Portable Text from CMS — only when present) ───────── */}
+      {service.content && service.content.length > 0 && (
+        <section className="border-t border-border/60 bg-background py-16 lg:py-24">
+          <div className="container max-w-4xl">
+            <div className="prose prose-lg prose-gray max-w-none">
               <PortableText value={service.content} components={portableTextComponents} />
-            ) : (
-              <DefaultServiceBody service={service} />
-            )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ───────── What's included ───────── */}
       {service.includes && service.includes.length > 0 && (
@@ -467,7 +428,7 @@ export default async function ServicePage({
           <div className="container">
             <div className="max-w-3xl">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Trade specification</p>
-              <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+              <h2 className="mt-2 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
                 What&apos;s included in our {serviceLower}
               </h2>
               <p className="mt-3 text-base text-muted-foreground">
@@ -478,7 +439,7 @@ export default async function ServicePage({
               {service.includes.map((item: string, idx: number) => (
                 <li
                   key={idx}
-                  className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-white py-2.5 pl-2.5 pr-5 shadow-2xs"
+                  className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-card py-2.5 pl-2.5 pr-5 shadow-2xs"
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                     <Check className="h-4 w-4" />
@@ -491,30 +452,6 @@ export default async function ServicePage({
         </section>
       )}
 
-      {/* ───────── Standards / why choose ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
-        <div className="container">
-          <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Our principles</p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
-              What you get on every job
-            </h2>
-            <p className="mt-3 text-base text-muted-foreground">
-              We hold ourselves to uncompromising standards of surface preparation, durability, and customer care.
-            </p>
-          </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {site.values.map((value, i) => (
-              <div key={value.title} className="group relative">
-                <span className="mb-3 block font-serif text-3xl font-light italic text-accent/60">0{i + 1}</span>
-                <h3 className="text-lg font-bold text-primary transition-colors group-hover:text-accent">{value.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{value.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ───────── Process ───────── */}
       <ProcessSection />
 
@@ -522,7 +459,7 @@ export default async function ServicePage({
       <section className="border-t border-border/60 bg-primary py-16 text-white lg:py-20">
         <div className="container text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Customer reviews</p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <h2 className="mt-2 font-display text-3xl font-normal tracking-tight sm:text-4xl">
             Trusted by homeowners across {site.location}
           </h2>
 
@@ -557,10 +494,10 @@ export default async function ServicePage({
       </section>
 
       {/* ───────── Tell us about your job (photo upload CTA) ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+      <section className="border-t border-border/60 bg-background py-16 lg:py-24">
         <div className="container">
           <div className="rounded-2xl border border-border/80 bg-secondary/40 p-8 text-center sm:p-12">
-            <h2 className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+            <h2 className="font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
               Tell us about your {serviceLower}
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
@@ -581,11 +518,11 @@ export default async function ServicePage({
       </section>
 
       {/* ───────── FAQ ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+      <section className="border-t border-border/60 bg-background py-16 lg:py-24">
         <div className="container max-w-4xl">
           <div className="text-center">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">FAQ</p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+            <h2 className="mt-2 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
               Frequently asked questions
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
@@ -617,7 +554,7 @@ export default async function ServicePage({
         <section className="border-t border-border/60 bg-secondary/30 py-16 lg:py-20">
           <div className="container">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">From our journal</p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+            <h2 className="mt-2 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
               Painting &amp; decorating tips
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -625,7 +562,7 @@ export default async function ServicePage({
                 <Link
                   key={p.slug?.current || p.slug}
                   href={`/blog/${p.slug?.current || p.slug}/`}
-                  className="group rounded-xl border border-border/80 bg-white p-5 transition-all hover:border-accent hover:shadow-xs"
+                  className="group rounded-sm border border-border/80 bg-card p-5 transition-all hover:border-accent hover:shadow-xs"
                 >
                   <h3 className="font-bold text-primary transition-colors group-hover:text-accent">{p.title}</h3>
                   {p.excerpt && (
@@ -642,12 +579,12 @@ export default async function ServicePage({
       )}
 
       {/* ───────── Other services ───────── */}
-      <section className="border-t border-border/60 bg-white py-16 lg:py-20">
+      <section className="border-t border-border/60 bg-background py-16 lg:py-24">
         <div className="container">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">All services</p>
-              <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+              <h2 className="mt-1 font-display text-3xl font-normal tracking-tight text-primary sm:text-4xl">
                 Other painting &amp; decorating services
               </h2>
             </div>
@@ -660,7 +597,7 @@ export default async function ServicePage({
               <Link
                 key={s.id}
                 href={`/services/${s.id}/`}
-                className="group flex items-center justify-between rounded-xl border border-border/80 bg-white p-4 text-sm font-semibold text-primary transition-all hover:border-accent hover:shadow-xs"
+                className="group flex items-center justify-between rounded-sm border border-border/80 bg-card p-4 text-sm font-semibold text-primary transition-all hover:border-accent hover:shadow-xs"
               >
                 <span>{s.title}</span>
                 <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-accent" />
@@ -676,6 +613,6 @@ export default async function ServicePage({
       />
 
       <CtaBand />
-    </>
+    </div>
   );
 }
