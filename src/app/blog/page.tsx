@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: `Read the latest articles, tips, and news from ${site.name}.`,
 };
 
+// Explicit ISR: re-generate the listing at most every 60s so newly published posts appear
+// without a redeploy (belt-and-braces alongside the `sanity` cache tag).
+export const revalidate = 60;
+
 export default async function BlogPage() {
   const posts = await getPosts();
 
