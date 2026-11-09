@@ -124,15 +124,55 @@ export type ServiceDoc = {
 
 const defaultServiceImages: Record<string, string> = {
   "interior-painting": "/images/s-l1600 (23).jpg",
-  "exterior-painting": "/images/s-l1600 (1).jpg",
-  "kitchen-cabinet-respraying": "/images/s-l1600 (20).jpg",
-  "commercial-painting": "/images/s-l1600 (3).jpg",
+  "exterior-painting": "/images/work/exterior-painting.jpg",
+  "kitchen-cabinet-respraying": "/images/work/kitchen-respray.jpg",
+  "commercial-painting": "/images/work/commercial-1.jpg",
   "wallpaper-hanging": "/images/s-l1600 (2).jpg",
   "plastering-drywall-repair": "/images/s-l1600 (11).jpg",
   "woodwork-doors-skirting": "/images/s-l1600 (22).jpg",
   "specialist-coatings": "/images/s-l1600 (17).jpg",
   "rental-turnaround-painting": "/images/s-l1600 (15).jpg",
   "colour-consultation": "/images/s-l1600 (19).jpg",
+};
+
+// Real ProBrush job photos per service. Shown FIRST in the "Recent … projects" gallery,
+// topped up with the general portfolio photos. A CMS gallery, when added, replaces these.
+const defaultServicePhotos: Record<string, Array<{ src: string; alt: string }>> = {
+  "commercial-painting": [
+    { src: "/images/work/commercial-2.jpg", alt: "Office corridor walls painted by ProBrush Painters" },
+    { src: "/images/work/commercial-3.jpg", alt: "Open-plan office walls painted by ProBrush Painters" },
+    { src: "/images/work/commercial-4.jpg", alt: "Office locker wall and corridor painted by ProBrush Painters" },
+    { src: "/images/work/commercial-5.jpg", alt: "Office corridor and seating alcove painted by ProBrush Painters" },
+    { src: "/images/work/commercial-6.jpg", alt: "Open-plan office walls and ceiling painted by ProBrush Painters" },
+    { src: "/images/work/commercial-7.jpg", alt: "Long office corridor painted by ProBrush Painters" },
+  ],
+  "exterior-painting": [
+    { src: "/images/work/exterior-painting.jpg", alt: "Exterior masonry wall painted by ProBrush Painters" },
+  ],
+  "kitchen-cabinet-respraying": [
+    { src: "/images/work/kitchen-respray.jpg", alt: "Kitchen units resprayed by ProBrush Painters" },
+  ],
+  "interior-painting": [
+    { src: "/images/work/interior-after.jpg", alt: "Living room feature wall repainted by ProBrush Painters" },
+  ],
+};
+
+// Real before/after pair from a ProBrush job (same wall, before and after repainting).
+const interiorBeforeAfter = {
+  before: {
+    src: "/images/work/interior-before.jpg",
+    alt: "Living room wall before repainting, with filler patches and taped-up sockets",
+  },
+  after: {
+    src: "/images/work/interior-after.jpg",
+    alt: "The same living room wall after repainting by ProBrush Painters",
+  },
+};
+
+// Service pages that get the real before/after pair when the CMS has none. Other services
+// keep their placeholder tiles — a living-room repaint would be wrong on, say, exterior.
+const defaultServiceBeforeAfter: Record<string, typeof interiorBeforeAfter> = {
+  "interior-painting": interiorBeforeAfter,
 };
 
 export async function getServiceBySlug(slug: string): Promise<ServiceDoc | null> {
@@ -158,10 +198,14 @@ export async function getServiceBySlug(slug: string): Promise<ServiceDoc | null>
     }));
   if (gallery.length === 0) {
     const { gallery: portfolio } = await getPortfolioData();
-    gallery = portfolio.slice(0, 6).map((g) => ({
-      src: g.src,
-      alt: `${title || "Painting & decorating"} project by ${site.name}`,
-    }));
+    const realPhotos = defaultServicePhotos[slug] || [];
+    const portfolioPhotos = portfolio
+      .filter((g) => !realPhotos.some((p) => p.src === g.src))
+      .map((g) => ({
+        src: g.src,
+        alt: `${title || "Painting & decorating"} project by ${site.name}`,
+      }));
+    gallery = [...realPhotos, ...portfolioPhotos].slice(0, 6);
   }
 
   return {
@@ -202,13 +246,16 @@ export async function getTestimonialsForService(category: string) {
   return matched;
 }
 
-// Before/after for service pages. Returns null unless REAL before+after photos exist in
-// the CMS portfolio — so the section hides until the team uploads them (no stock placeholder).
-export async function getBeforeAfter(): Promise<
+// Before/after for service pages. Uses the CMS portfolio pair when set; otherwise a REAL
+// ProBrush pair for services listed in `defaultServiceBeforeAfter`; otherwise null (the page
+// shows placeholder tiles — never stock photos presented as a transformation).
+export async function getBeforeAfter(slug?: string): Promise<
   { before: { src: string; alt: string }; after: { src: string; alt: string } } | null
 > {
   const d = await sanityFetch<any>(beforeAfterQuery);
-  if (!d?.before?.url || !d?.after?.url) return null;
+  if (!d?.before?.url || !d?.after?.url) {
+    return (slug && defaultServiceBeforeAfter[slug]) || null;
+  }
   return {
     before: {
       src: urlFor(d.before).width(1000).quality(85).url(),
@@ -303,9 +350,10 @@ export type GalleryImage = { src: string; label: string };
 export async function getPortfolioData() {
   const d = await sanityFetch<any>(portfolioQuery);
 
+  // Real ProBrush before/after pair (same living-room wall).
   const defaultTrans1: Transformation1 = {
-    before: { src: "/images/s-l1600 (9).jpg", label: "Before" },
-    after: { src: "/images/s-l1600 (10).jpg", label: "After" },
+    before: { src: interiorBeforeAfter.before.src, label: "Before" },
+    after: { src: interiorBeforeAfter.after.src, label: "After" },
   };
 
   const defaultTrans2: Transformation2 = {

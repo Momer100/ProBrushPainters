@@ -182,7 +182,7 @@ export default async function ServicePage({
     getServices(),
     getTestimonialsForService(service.title),
     getPosts(),
-    getBeforeAfter(),
+    getBeforeAfter(service.id),
   ]);
 
   const Icon = icons[service.icon] ?? PaintRoller;
