@@ -94,3 +94,36 @@
 
   font-family: var(--font-garamond), Georgia, "Times New Roman", serif;
 }
+
+/*
+ * Bridge for the TOP of the service pages: inside `.service-skin`, the hero restores the
+ * original ProBrush brand (navy / amber / Plus Jakarta) so it continues seamlessly from the
+ * site header and homepage. Values mirror `:root` above. `--background` is intentionally NOT
+ * reset, so the hero's gradient ends on the skin's cream and flows into the editorial band.
+ */
+.service-hero {
+  --foreground: 211 56% 16%;
+
+  --primary: 210 64% 22%;
+  --primary-foreground: 0 0% 100%;
+
+  --accent: 36 95% 50%;
+  --accent-foreground: 210 64% 14%;
+
+  --secondary: 210 40% 94%;
+  --secondary-foreground: 210 64% 22%;
+
+  --muted: 38 22% 94%;
+  --muted-foreground: 213 18% 42%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 211 56% 16%;
+
+  --border: 36 18% 88%;
+  --input: 36 18% 85%;
+  --ring: 36 95% 50%;
+
+  --radius: 0.875rem;
+
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}

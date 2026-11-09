@@ -261,8 +261,8 @@ export default async function ServicePage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      {/* ───────── Hero ───────── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-secondary/50 via-background to-background pt-10 pb-14 lg:pt-14 lg:pb-20">
+      {/* ───────── Hero (original ProBrush look, bridging into the editorial page) ───────── */}
+      <section className="service-hero relative overflow-hidden bg-gradient-to-b from-secondary/60 via-background to-background pt-10 pb-14 lg:pt-14 lg:pb-20">
         <div className="container">
           <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs font-semibold text-muted-foreground">
             <Link href="/" className="transition-colors hover:text-accent">Home</Link>
@@ -274,15 +274,15 @@ export default async function ServicePage({
 
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-accent">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-accent">
                 <Icon className="h-4 w-4" /> Painting &amp; Decorating
               </p>
 
-              <h1 className="mt-4 font-display text-4xl font-normal leading-[1.08] tracking-tight text-primary text-balance sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-primary text-balance sm:text-5xl lg:text-[3.4rem]">
                 {service.heroHeadline || `Professional ${service.title} in ${site.location}`}
               </h1>
 
-              <div className="mt-5 space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <div className="mt-5 space-y-4 text-lg leading-relaxed text-muted-foreground">
                 {service.heroText ? (
                   <p className="whitespace-pre-line">{service.heroText}</p>
                 ) : (
@@ -298,11 +298,11 @@ export default async function ServicePage({
               </div>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href={`tel:${site.phoneHref}`} className={buttonVariants({ variant: "primary", size: "lg", className: "rounded-sm" })}>
+                <a href={`tel:${site.phoneHref}`} className={buttonVariants({ variant: "accent", size: "lg" })}>
                   <Phone className="h-4 w-4" />
                   Call for a Free Quote
                 </a>
-                <Link href="/get-a-quote/" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-sm" })}>
+                <Link href="/get-a-quote/" className={buttonVariants({ variant: "outline", size: "lg" })}>
                   Get a Quote Online
                 </Link>
               </div>
@@ -323,7 +323,7 @@ export default async function ServicePage({
             </div>
 
             <div className="lg:col-span-5">
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm border border-border/80 bg-muted shadow-lg sm:aspect-[16/10] lg:aspect-[4/3]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-muted shadow-lift sm:aspect-[16/10] lg:aspect-[4/3]">
                 {service.heroImage ? (
                   <Image
                     src={service.heroImage.url}
@@ -341,7 +341,7 @@ export default async function ServicePage({
           </div>
 
           {/* Key facts strip */}
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-border/80 bg-border/60 sm:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/80 bg-border/60 sm:grid-cols-4">
             {keyFacts.slice(0, 4).map((f: { label: string; value: string }) => (
               <div key={f.label} className="bg-card p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-accent">{f.label}</p>
